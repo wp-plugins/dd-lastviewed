@@ -4,7 +4,7 @@ Donate link:
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 
+Stable tag: 0.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,7 @@ Do you have ideas, questions or issues with LastViewed? Please visit dijkstrades
 
 == Screenshots ==
 
-1. screenshots/screenshot1.png
+1. screenshot1.png
 
 == Changelog ==
 
