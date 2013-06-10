@@ -39,7 +39,7 @@ Do you have ideas, questions or issues with LastViewed? Please visit dijkstrades
 
 == Screenshots ==
 
-1. screenshot1.png
+1. screenshot-1.png
 
 == Changelog ==
 
