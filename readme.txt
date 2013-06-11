@@ -4,7 +4,7 @@ Donate link:
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 0.7.2
+Stable tag: 0.7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,16 +35,25 @@ The widget looks for the cookie. So to activate the widget, the visitor has to g
 
 == Frequently asked questions ==
 
-Do you have ideas, questions or issues with LastViewed? Please visit dijkstradesign.com and leave a message.
+Do you have ideas, questions or issues with LastViewed? Please leave a message in the support forum.
 
 == Screenshots ==
 
 1. screenshot-1.png
 
+When you're using custom posttypes, they will show up like posts.
+
 == Changelog ==
 
 = 0.7.1 =
 * Bugfixes
+
+= 0.7.2 =
+* Bugfixes
+
+= 0.7.3 =
+* Bugfixes
+* solved the warnings when a variable is not set.
 
 == Upgrade notice ==
 
