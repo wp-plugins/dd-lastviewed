@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 0.7.2
+Version: 0.7.3
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed widget
 Author: Wouter Dijkstra
@@ -36,8 +36,12 @@ class lastviewed extends WP_Widget
 
     function form($instance)
     {
-        // outputs the options form on admin
-        $lastviewedTitle = esc_attr($instance['lastviewedTitle']);
+        if (isset($instance['lastviewedTitle']))
+        {
+            //If not isset -> set with dumy value
+            // outputs the options form on admin
+            $lastviewedTitle = esc_attr($instance['lastviewedTitle']);
+        }
 
         ?>
         <p>
@@ -106,13 +110,20 @@ class lastviewed extends WP_Widget
         }
         echo '</p>';
 
-        $lastViewed_thumb = esc_attr($instance['lastViewed_thumb']);
-        if ($lastViewed_thumb == 'yes') {
-            $yesSelect = "checked";
-        } else {
-            $noSelect = "checked";
+        if (isset($instance['lastViewed_thumb']))
+        {
+            //If not isset -> set with dumy value
+            // outputs the options form on admin
+            $lastViewed_thumb = esc_attr($instance['lastViewed_thumb']);
         }
 
+        if ($lastViewed_thumb == 'yes') {
+            $yesSelect = "checked";
+            $noSelect = "";
+        } else {
+            $noSelect = "checked";
+            $yesSelect = "";
+        }
 
         echo '
             <p><label>Show thumbnails if excist:</label><br>
@@ -121,7 +132,13 @@ class lastviewed extends WP_Widget
             </p>
         ';
 
-        $lastViewed_total = esc_attr($instance['lastViewed_total']);
+        if (isset($instance['lastViewed_total']))
+        {
+            //If not isset -> set with dumy value
+            // outputs the options form on admin
+            $lastViewed_total = esc_attr($instance['lastViewed_total']);
+        }
+
 
         if ($lastViewed_total == "") {
             $lastViewed_total = 5;
@@ -130,7 +147,15 @@ class lastviewed extends WP_Widget
             <p><label>Number to show:<label>
             <input type="number" name="' . $this->get_field_name('lastViewed_total') . '" min="1" max="10" value="' . $lastViewed_total . '"></p>
         ';
-        $lastViewed_truncate = esc_attr($instance['lastViewed_truncate']);
+
+        if (isset($instance['lastViewed_truncate']))
+        {
+            //If not isset -> set with dumy value
+            // outputs the options form on admin
+            $lastViewed_truncate = esc_attr($instance['lastViewed_truncate']);
+        }
+
+
         if ($lastViewed_truncate == "") {
             $lastViewed_truncate = 78;
         }
