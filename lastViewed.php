@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 0.7.3
+Version: 0.0.0
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed widget
 Author: Wouter Dijkstra
@@ -31,22 +31,24 @@ class lastviewed extends WP_Widget
     function lastviewed()
     {
         parent::WP_Widget(false, 'Last viewed', array('description' => __('Shows the last viewed of a post or custom posttype.', 'text_domain'),));
-
     }
 
     function form($instance)
     {
         if (isset($instance['lastviewedTitle']))
         {
-            //If not isset -> set with dumy value
             // outputs the options form on admin
-            $lastviewedTitle = esc_attr($instance['lastviewedTitle']);
+            $lastviewedTitle = $instance['lastviewedTitle'];
         }
+        else{
+            $lastviewedTitle = "Last Viewed";
+        }
+
 
         ?>
         <p>
             <label for="<?php echo $this->get_field_id('lastviewedTitle'); ?> ">Titel:</label>
-            <input id="<?php echo $this->get_field_id('lastviewedTitle'); ?>" class=" widefat textWrite_Title" type="text" value="<?php echo attribute_escape($lastviewedTitle); ?>"name="<?php echo $this->get_field_name('lastviewedTitle'); ?>">
+            <input id="<?php echo $this->get_field_id('lastviewedTitle'); ?>" class=" widefat textWrite_Title" type="text" value="<?php echo esc_attr($lastviewedTitle); ?>"name="<?php echo $this->get_field_name('lastviewedTitle'); ?>">
         </p>
         <p>Select the types:<br/>
 
@@ -96,8 +98,17 @@ class lastviewed extends WP_Widget
             $option = '<label for="LV_checkbox_' . $post_type . '">';
             $option .= '<input type="checkbox" class="checkbox" id="LV_checkbox_' . $post_type . '" name="' . $this->get_field_name('selected_posttypes') . '[]"';
 
-            if (is_array($instance['selected_posttypes'])) {
-                foreach ($instance['selected_posttypes'] as $selected_type) {
+            if (isset($instance['selected_posttypes']))
+            {
+                // outputs the options form on admin
+                $selected_posttypes = $instance['selected_posttypes'];
+            }
+            else{
+                $selected_posttypes = "";
+            }
+
+            if (is_array($selected_posttypes)) {
+                foreach ($selected_posttypes as $selected_type) {
                     if ($selected_type == $post_type) {
                         $option = $option . ' checked="checked"';
                     }
@@ -112,18 +123,22 @@ class lastviewed extends WP_Widget
 
         if (isset($instance['lastViewed_thumb']))
         {
-            //If not isset -> set with dumy value
             // outputs the options form on admin
-            $lastViewed_thumb = esc_attr($instance['lastViewed_thumb']);
+            $lastViewed_thumb = $instance['lastViewed_thumb'];
+        }
+        else{
+            $lastViewed_thumb = "";
         }
 
+        $lastViewed_thumb = esc_attr($lastViewed_thumb);
         if ($lastViewed_thumb == 'yes') {
-            $yesSelect = "checked";
             $noSelect = "";
+            $yesSelect = "checked";
         } else {
             $noSelect = "checked";
             $yesSelect = "";
         }
+
 
         echo '
             <p><label>Show thumbnails if excist:</label><br>
@@ -134,11 +149,15 @@ class lastviewed extends WP_Widget
 
         if (isset($instance['lastViewed_total']))
         {
-            //If not isset -> set with dumy value
             // outputs the options form on admin
-            $lastViewed_total = esc_attr($instance['lastViewed_total']);
+            $lastViewed_total = $instance['lastViewed_total'];
+        }
+        else{
+            $lastViewed_total = "";
         }
 
+
+        $lastViewed_total = esc_attr($lastViewed_total);
 
         if ($lastViewed_total == "") {
             $lastViewed_total = 5;
@@ -150,12 +169,14 @@ class lastviewed extends WP_Widget
 
         if (isset($instance['lastViewed_truncate']))
         {
-            //If not isset -> set with dumy value
             // outputs the options form on admin
-            $lastViewed_truncate = esc_attr($instance['lastViewed_truncate']);
+            $lastViewed_truncate = $instance['lastViewed_truncate'];
+        }
+        else{
+            $lastViewed_truncate = "";
         }
 
-
+        $lastViewed_truncate = esc_attr($lastViewed_truncate);
         if ($lastViewed_truncate == "") {
             $lastViewed_truncate = 78;
         }
@@ -163,6 +184,27 @@ class lastviewed extends WP_Widget
             <p><label>Truncate excerpt:<label>
             <input type="number" name="' . $this->get_field_name('lastViewed_truncate') . '" min="1" max="10" value="' . $lastViewed_truncate . '"></p>
         ';
+
+        if (isset($instance['lastViewed_linkname']))
+        {
+            // outputs the options form on admin
+            $lastViewed_linkname = $instance['lastViewed_linkname'];
+        }
+        else{
+            $lastViewed_linkname = "More";
+        }
+
+        $lastViewed_linkname = esc_attr($lastViewed_linkname);
+
+        echo'
+            <p><label>Link name:<label>
+             <input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'"></p>
+
+
+
+        ';
+
+
     }
 
     function update($new_instance, $old_instance)
@@ -174,6 +216,7 @@ class lastviewed extends WP_Widget
         $instance['lastViewed_thumb'] = strip_tags($new_instance['lastViewed_thumb']);
         $instance['lastViewed_total'] = strip_tags($new_instance['lastViewed_total']);
         $instance['lastViewed_truncate'] = strip_tags($new_instance['lastViewed_truncate']);
+        $instance['lastViewed_linkname'] = strip_tags($new_instance['lastViewed_linkname']);
         return $instance;
         return $new_instance;
     }
@@ -202,6 +245,10 @@ class lastviewed extends WP_Widget
         if ($lastViewed_truncate == ''){
             $lastViewed_truncate = 78;
         }
+        $lastViewed_linkname = apply_filters('lastViewed_linkname', $instance['lastViewed_linkname']);
+
+
+
 
         if (isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
             ?>
@@ -231,9 +278,14 @@ class lastviewed extends WP_Widget
                         preg_match_all('!\d+!', $widgetId, $widgetId);
                         $widgetId = implode(' ', $widgetId[0]);
 
-                        //the number is the widgetnumber inside the admin
-                        $selected_posttypes = $selected_posttypes[$widgetId]["selected_posttypes"];
 
+
+                        if (isset($selected_posttypes[$widgetId]["selected_posttypes"]))
+                        {
+                            //the number is the widgetnumber inside the admin
+                            $selected_posttypes = $selected_posttypes[$widgetId]["selected_posttypes"];
+                        };
+                        $count ='';
                         //Do not show types who aren't allowed
                         foreach ($selected_posttypes as $selected_type) {
 
@@ -243,7 +295,6 @@ class lastviewed extends WP_Widget
                                 if ($count > $lastViewed_total) {
                                     break;
                                 }
-                                // TODO :: Mooi maken
 
                                 echo '<li class="clearfix">';
 
@@ -257,7 +308,7 @@ class lastviewed extends WP_Widget
                                 }
                                 echo '<div class="lastViewedcontent">';
                                 echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
-                                echo "<p class='lastViewedExcerpt'>" . substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' ')) . '...<a href="' . get_permalink($id) . '" class="more">more</a></p>'; //stop afterfull word
+                                echo "<p class='lastViewedExcerpt'>" . substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' ')) . '...<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a></p>'; //stop afterfull word
                                 echo '</div>';
                                 echo '</li>';
                             }

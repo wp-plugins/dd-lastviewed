@@ -1,10 +1,10 @@
 === Last Viewed ===
 Contributors: Mosterd3d
 Donate link: 
-Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie
+Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 0.7.3
+Stable tag: 0.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,15 +45,24 @@ When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
 
-= 0.7.1 =
+= 0.8.0 =
 * Bugfixes
+* solved the warnings when a variable is not set FULLY.
+* Make custom link name
+* Set default title to "Last Viewed"
 
-= 0.7.2 =
-* Bugfixes
 
 = 0.7.3 =
 * Bugfixes
 * solved the warnings when a variable is not set.
+
+= 0.7.2 =
+* Bugfixes
+
+= 0.7.1 =
+* Bugfixes
+
+
 
 == Upgrade notice ==
 
