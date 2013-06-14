@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 0.0.0
+Version: 0.8.0
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed widget
 Author: Wouter Dijkstra
