@@ -70,8 +70,17 @@ class lastviewed extends WP_Widget
             $option = '<label for="LV_checkbox_' . $post_type . '">';
             $option .= '<input type="checkbox" id="LV_checkbox_' . $post_type . '" name="' . $this->get_field_name('selected_posttypes') . '[]"';
 
-            if (is_array($instance['selected_posttypes'])) {
-                foreach ($instance['selected_posttypes'] as $selected_type) {
+            if (isset($instance['selected_posttypes']))
+            {
+                // outputs the options form on admin
+                $selected_posttypes = $instance['selected_posttypes'];
+            }
+            else{
+                $selected_posttypes = "";
+            }
+
+            if (is_array($selected_posttypes)) {
+                foreach ($selected_posttypes as $selected_type) {
                     if ($selected_type == $post_type) {
                         $option = $option . ' checked="checked"';
                     }
