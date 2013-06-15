@@ -4,7 +4,7 @@ Donate link:
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 0.8.0
+Stable tag: 0.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,10 +40,17 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 == Screenshots ==
 
 1. screenshot-1.png
+2. screenshot-2.png
+3. screenshot-3.png
+4. screenshot-4.png
 
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 0.8.1 =
+* At least posts need to be selected, otherwise this plugin is worthless! ;)
+* At more screenshots
 
 = 0.8.0 =
 * Bugfixes

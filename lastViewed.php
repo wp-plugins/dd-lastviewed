@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 0.8.0
+Version: 0.8.1
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed widget
 Author: Wouter Dijkstra
@@ -50,7 +50,7 @@ class lastviewed extends WP_Widget
             <label for="<?php echo $this->get_field_id('lastviewedTitle'); ?> ">Titel:</label>
             <input id="<?php echo $this->get_field_id('lastviewedTitle'); ?>" class=" widefat textWrite_Title" type="text" value="<?php echo esc_attr($lastviewedTitle); ?>"name="<?php echo $this->get_field_name('lastviewedTitle'); ?>">
         </p>
-        <p>Select the types:<br/>
+        <p class="typeholder">Select the types:<br/>
 
         <?php
         $args = array(
@@ -68,7 +68,7 @@ class lastviewed extends WP_Widget
             $RealName = $obj->labels->name;
 
             $option = '<label for="LV_checkbox_' . $post_type . '">';
-            $option .= '<input type="checkbox" id="LV_checkbox_' . $post_type . '" name="' . $this->get_field_name('selected_posttypes') . '[]"';
+            $option .= '<input type="checkbox" class="checkbox posttypeCheckbox customPostCheck"id="LV_checkbox_' . $post_type . '" name="' . $this->get_field_name('selected_posttypes') . '[]"';
 
             if (isset($instance['selected_posttypes']))
             {
@@ -105,7 +105,7 @@ class lastviewed extends WP_Widget
             }
 
             $option = '<label for="LV_checkbox_' . $post_type . '">';
-            $option .= '<input type="checkbox" class="checkbox" id="LV_checkbox_' . $post_type . '" name="' . $this->get_field_name('selected_posttypes') . '[]"';
+            $option .= '<input type="checkbox" class="checkbox posttypeCheckbox postCheck" id="LV_checkbox_' . $post_type . '" name="' . $this->get_field_name('selected_posttypes') . '[]"';
 
             if (isset($instance['selected_posttypes']))
             {
@@ -355,5 +355,15 @@ function addToHeader()
     echo $stylesheet;
 }
 add_action('wp_head', 'addToHeader');
+
+
+function addToAdminFooter()
+{
+    $plugin_url_path = WP_PLUGIN_URL;
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('lastViewed', $plugin_url_path . '/lastViewed/js/admin.js', array(), '0');
+}
+add_action( 'admin_footer', 'addToAdminFooter' );
+
 
 ?>
