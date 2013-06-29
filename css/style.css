@@ -19,7 +19,8 @@
     font-size: 0;
 }
 
-
+.widget_lastViewed .lastViewedList {list-style: none;}
+.widget_lastViewed .lastViewedList li { margin: 0;}
 .lastViewedThumb {float: left; margin: 6px 6px 6px 0;}
 .lastViewedThumb img {width: 48px;}
 
