@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 0.8.1
+Version: 0.9.0
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed widget
 Author: Wouter Dijkstra
@@ -37,13 +37,11 @@ class lastviewed extends WP_Widget
     {
         if (isset($instance['lastviewedTitle']))
         {
-            // outputs the options form on admin
             $lastviewedTitle = $instance['lastviewedTitle'];
         }
         else{
             $lastviewedTitle = "Last Viewed";
         }
-
 
         ?>
         <p>
@@ -72,7 +70,6 @@ class lastviewed extends WP_Widget
 
             if (isset($instance['selected_posttypes']))
             {
-                // outputs the options form on admin
                 $selected_posttypes = $instance['selected_posttypes'];
             }
             else{
@@ -109,7 +106,6 @@ class lastviewed extends WP_Widget
 
             if (isset($instance['selected_posttypes']))
             {
-                // outputs the options form on admin
                 $selected_posttypes = $instance['selected_posttypes'];
             }
             else{
@@ -132,7 +128,6 @@ class lastviewed extends WP_Widget
 
         if (isset($instance['lastViewed_thumb']))
         {
-            // outputs the options form on admin
             $lastViewed_thumb = $instance['lastViewed_thumb'];
         }
         else{
@@ -158,14 +153,11 @@ class lastviewed extends WP_Widget
 
         if (isset($instance['lastViewed_total']))
         {
-            // outputs the options form on admin
             $lastViewed_total = $instance['lastViewed_total'];
         }
         else{
             $lastViewed_total = "";
         }
-
-
         $lastViewed_total = esc_attr($lastViewed_total);
 
         if ($lastViewed_total == "") {
@@ -178,7 +170,6 @@ class lastviewed extends WP_Widget
 
         if (isset($instance['lastViewed_truncate']))
         {
-            // outputs the options form on admin
             $lastViewed_truncate = $instance['lastViewed_truncate'];
         }
         else{
@@ -196,7 +187,6 @@ class lastviewed extends WP_Widget
 
         if (isset($instance['lastViewed_linkname']))
         {
-            // outputs the options form on admin
             $lastViewed_linkname = $instance['lastViewed_linkname'];
         }
         else{
@@ -207,13 +197,7 @@ class lastviewed extends WP_Widget
 
         echo'
             <p><label>Link name:<label>
-             <input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'"></p>
-
-
-
-        ';
-
-
+             <input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'"></p>';
     }
 
     function update($new_instance, $old_instance)
@@ -230,33 +214,40 @@ class lastviewed extends WP_Widget
         return $new_instance;
     }
 
-    function widget($args, $instance)
+    function widget($args)
     {
-        // outputs the content of the widget
-        extract($args, EXTR_SKIP);
+        $widgetID = $args['widget_id'];
+
+        if (isset($args['by_shortcode']))
+        {
+            $by_shortcode = $args['by_shortcode'];
+        }
+        else{
+            $by_shortcode = '';
+        }
+
+        $widgetID = str_replace('lastviewed-', '', $widgetID);
+        $widgetOptions = get_option($this->option_name);
+
+        $lastviewedTitle = $widgetOptions[$widgetID]['lastviewedTitle'];
+        $lastViewed_thumb = $widgetOptions[$widgetID]['lastViewed_thumb'];
+        $lastViewed_total = $widgetOptions[$widgetID]['lastViewed_total'];
+        $lastViewed_truncate = $widgetOptions[$widgetID]['lastViewed_truncate'];
+        if ($lastViewed_truncate == ''){
+            $lastViewed_truncate = 78;
+        }
+        $lastViewed_linkname = $widgetOptions[$widgetID]['lastViewed_linkname'];
 
         $widgetId = $args['widget_id'];
         preg_match_all('!\d+!', $widgetId, $widgetId);
         $widgetId = implode(' ', $widgetId[0]);
 
-        $before_widget = '<div id="lastViewed-' . $widgetId . '" class="widget widget_lastViewed">';
+        $before_widget = '<div id="'.$by_shortcode.'lastViewed-' . $widgetId . '" class="widget widget_lastViewed">';
         $after_widget = '</div>';
 
         $lastlist = ($_COOKIE['lastViewed']);
         $idList = explode(",", $lastlist);
         $idList = array_reverse($idList);
-
-
-        $lastviewedTitle = apply_filters('lastviewed', $instance['lastviewedTitle']);
-        $lastViewed_thumb = apply_filters('lastViewed_thumb', $instance['lastViewed_thumb']);
-        $lastViewed_total = intval(apply_filters('lastViewed_total', $instance['lastViewed_total']));
-        $lastViewed_truncate = intval(apply_filters('lastViewed_truncate', $instance['lastViewed_truncate']));
-        if ($lastViewed_truncate == ''){
-            $lastViewed_truncate = 78;
-        }
-        $lastViewed_linkname = apply_filters('lastViewed_linkname', $instance['lastViewed_linkname']);
-
-
 
 
         if (isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
@@ -295,7 +286,7 @@ class lastviewed extends WP_Widget
                             $selected_posttypes = $selected_posttypes[$widgetId]["selected_posttypes"];
                         };
                         $count ='';
-                        //Do not show types who aren't allowed
+                        //Do not show types which aren't allowed
                         foreach ($selected_posttypes as $selected_type) {
 
                             if ($selected_type == $viewType) {
@@ -365,5 +356,20 @@ function addToAdminFooter()
 }
 add_action( 'admin_footer', 'addToAdminFooter' );
 
+
+function shortcode_lastviewed( $atts ){
+    // Configure defaults and extract the attributes into variables
+
+    $args = array(
+        'widget_id' => $atts['widget_id'],
+        'by_shortcode' => 'shortcode_',
+    );
+
+    ob_start();
+    the_widget( 'lastviewed', '', $args);
+    $output = ob_get_clean();
+    return $output;
+}
+add_shortcode( 'dd_lastviewed', 'shortcode_lastviewed' );
 
 ?>

@@ -4,7 +4,7 @@ Donate link:
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 0.8.1
+Stable tag: 0.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,8 @@ The widget looks for the cookie. So to activate the widget, the visitor has to g
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Customize the widget
 
+You can use [dd_lastviewed widget_id="12"] as shortcode to publish the widget inside a page or a post. Do not forget to use the correct id!
+
 == Frequently asked questions ==
 
 Do you have ideas, questions or issues with LastViewed? Please leave a message in the support forum.
@@ -43,10 +45,15 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 2. screenshot-2.png
 3. screenshot-3.png
 4. screenshot-4.png
+4. screenshot-5.png
 
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 0.9.0 =
+* Use the widget inside page or post with shortcode eg. [dd_lastviewed widget_id="12"]
+* Clean up some code
 
 = 0.8.1 =
 * At least posts need to be selected, otherwise this plugin is worthless! ;)
