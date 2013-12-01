@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 0.9.0
+Version: 0.9.1
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed widget
 Author: Wouter Dijkstra
@@ -42,6 +42,8 @@ class lastviewed extends WP_Widget
         else{
             $lastviewedTitle = "Last Viewed";
         }
+
+        $widgetID = str_replace('lastviewed-', '', $this->id);
 
         ?>
         <p>
@@ -198,6 +200,13 @@ class lastviewed extends WP_Widget
         echo'
             <p><label>Link name:<label>
              <input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'"></p>';
+
+        echo'
+             <p style="font-size: 11px; opacity:0.6">
+            <span class="shortcodeTtitle">Shortcode:</span>
+            <span class="shortcode">[dd_lastviewed widget_id="'.$widgetID.'"]</span>
+        </p>
+        ';
     }
 
     function update($new_instance, $old_instance)

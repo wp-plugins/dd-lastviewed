@@ -3,8 +3,8 @@ Contributors: Mosterd3d
 Donate link: 
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget
 Requires at least: 3.3
-Tested up to: 3.5.1
-Stable tag: 0.9.0
+Tested up to: 3.7.1
+Stable tag: 0.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,9 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 0.9.0 =
+* Added shortcode to the widgetform for easy use, copy paste.
 
 = 0.9.0 =
 * Use the widget inside page or post with shortcode eg. [dd_lastviewed widget_id="12"]
