@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=5V2C9
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget
 Requires at least: 3.3
 Tested up to: 3.8
-Stable tag: 1.0
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,8 +22,6 @@ The widget is fully set.
 * Set the excerpt length
 
 The plugin sets a cookie that keeps track of the visited IDs. It uses jquery.cookie.js to make this possible. 
-
-EU: this is a functional cookie, so warning not required.
 
 The widget looks for the cookie. So to activate the widget, the visitor has to go first to a single page of the selected posttypes to display the widget. 
 
@@ -50,6 +48,9 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 1.1 =
+* Bugfix: number to show
 
 = 1.0 =
 * Cleanup the code
