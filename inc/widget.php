@@ -56,10 +56,9 @@ class lastviewed extends WP_Widget
             $RealName = $obj->labels->name;
             $selected_posttypes = isset($instance['selected_posttypes']) ? $instance['selected_posttypes'] : "";
 
-            if ($post_type == 'page' || $post_type == 'attachment' || $post_type == 'revision' || $post_type == 'nav_menu_item') {
+            if (in_array($post_type, array('page','attachment','revision','nav_menu_item'))) {
                 break;
             }
-
             $option = '<label>';
             $option .= '<input type="checkbox" class="checkbox posttypeCheckbox customPostCheck"id="LV_checkbox_' . $post_type . '" name="' . $this->get_field_name('selected_posttypes') . '[]"';
             if (is_array($selected_posttypes)) {
@@ -124,9 +123,12 @@ class lastviewed extends WP_Widget
 
         extract($args, EXTR_SKIP);
 
+        echo $lastViewed_total;
+
         if (isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
 
             echo $before_widget;
+            $count = 0;
             echo '<h3>'.$lastviewedTitle.'</h3>';
             echo '<ul class="lastViewedList">';
                 foreach ($idList as $id) {
@@ -144,27 +146,29 @@ class lastviewed extends WP_Widget
                         $selected_posttypes = get_option('widget_lastViewed');
                         $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : "";
 
-                        $count ='';
+
                         //Do not show types which aren't allowed
                         foreach ($selected_posttypes as $selected_type) {
 
                             if ($selected_type == $viewType) {
 
-                                $count++;
-                                if ($count > $lastViewed_total) {
-                                    break;
+
+                                if ($count < $lastViewed_total) {
+
+                                    $count++;
+                                    echo '<li class="clearfix">';
+
+                                    if ($lastViewed_thumb == 'yes' && has_post_thumbnail($id)) {
+                                        echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
+                                    }
+                                    echo '<div class="lastViewedcontent">';
+                                    echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
+                                    echo "<p class='lastViewedExcerpt'>" . substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' ')) . '...<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a></p>'; //stop afterfull word
+                                    echo '</div>';
+                                    echo '</li>';
                                 }
 
-                                echo '<li class="clearfix">';
 
-                                if ($lastViewed_thumb == 'yes' && has_post_thumbnail($id)) {
-                                    echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
-                                }
-                                echo '<div class="lastViewedcontent">';
-                                echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
-                                echo "<p class='lastViewedExcerpt'>" . substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' ')) . '...<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a></p>'; //stop afterfull word
-                                echo '</div>';
-                                echo '</li>';
                             }
                         }
                     }
