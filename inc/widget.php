@@ -123,12 +123,13 @@ class lastviewed extends WP_Widget
 
         extract($args, EXTR_SKIP);
 
-        echo $lastViewed_total;
-
         if (isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
 
-            echo $before_widget;
             $count = 0;
+            $currentVisitPostId = get_the_ID();
+
+            echo $before_widget;
+
             echo '<h3>'.$lastviewedTitle.'</h3>';
             echo '<ul class="lastViewedList">';
                 foreach ($idList as $id) {
@@ -136,7 +137,7 @@ class lastviewed extends WP_Widget
                     global $wpdb;
                     $post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $id . "'", 'ARRAY_A');
 
-                    if ($post_exists) {
+                    if ($post_exists && $id != $currentVisitPostId ) {
 
                         $the_post = get_post($id); //Gets post ID
                         $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_post->post_content;
@@ -146,6 +147,7 @@ class lastviewed extends WP_Widget
                         $selected_posttypes = get_option('widget_lastViewed');
                         $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : "";
 
+                        echo $visitPostId;
 
                         //Do not show types which aren't allowed
                         foreach ($selected_posttypes as $selected_type) {
