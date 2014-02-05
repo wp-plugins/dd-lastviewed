@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=5V2C9
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget
 Requires at least: 3.3
 Tested up to: 3.8
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,10 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 1.2 =
+* Bugfix: removed the debug echo
+* Do not show current visit post in widget
 
 = 1.1 =
 * Bugfix: number to show
