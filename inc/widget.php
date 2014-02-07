@@ -17,23 +17,9 @@ class lastviewed extends WP_Widget
     {
         $lastviewedTitle = isset($instance['lastviewedTitle']) ? $instance['lastviewedTitle'] : "Last Viewed";
         $widgetID = str_replace('lastviewed-', '', $this->id);
-
         $fieldID = $this->get_field_id('lastviewedTitle');
         $fieldName = $this->get_field_name('lastviewedTitle');
-
-        echo '<p>';
-        echo '<label for="'.$fieldID.'">Titel:</label>';
-        echo '<input id="'.$fieldID.'" class=" widefat textWrite_Title" type="text" value="'.esc_attr($lastviewedTitle).'"name="'.$fieldName.'">';
-        echo '</p>';
-        echo '<p class="typeholder">Select the types:<br/>';
-
-        $args = array(
-            'public' => true,
-            '_builtin' => false
-        );
-
-        //grab the post_types active in theme
-
+        $args = array('public' => true,'_builtin' => false);//grab the post_types active in theme
         $output = 'names'; // names or objects, note names is the default
         $operator = 'and'; // 'and' or 'or'
         $custom_post_types = get_post_types($args, $output, $operator);
@@ -49,6 +35,12 @@ class lastviewed extends WP_Widget
         $lastViewed_truncate = esc_attr($lastViewed_truncate);
         $lastViewed_linkname = isset($instance['lastViewed_linkname']) ? $instance['lastViewed_linkname'] : "More";
         $lastViewed_linkname = esc_attr($lastViewed_linkname);
+
+        echo '<p>';
+        echo '<label for="'.$fieldID.'">Titel:</label>';
+        echo '<input id="'.$fieldID.'" class=" widefat textWrite_Title" type="text" value="'.esc_attr($lastviewedTitle).'"name="'.$fieldName.'">';
+        echo '</p>';
+        echo '<p class="typeholder">Select the types:<br/>';
 
         foreach ($post_types as $post_type) {
 
@@ -109,7 +101,6 @@ class lastviewed extends WP_Widget
     function widget($args)
     {
         $widgetID = $args['widget_id'];
-        $by_shortcode = isset($args['by_shortcode'])? $args['by_shortcode'] : "";
         $widgetID = str_replace('lastviewed-', '', $widgetID);
         $widgetOptions = get_option($this->option_name);
         $lastviewedTitle = $widgetOptions[$widgetID]['lastviewedTitle'];
@@ -120,57 +111,45 @@ class lastviewed extends WP_Widget
         $lastlist = ($_COOKIE['lastViewed']);
         $idList = explode(",", $lastlist);
         $idList = array_reverse($idList);
+        $count = 0;
+        $currentVisitPostId = get_the_ID();
 
         extract($args, EXTR_SKIP);
 
         if (isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
 
-            $count = 0;
-            $currentVisitPostId = get_the_ID();
-
             echo $before_widget;
-
             echo '<h3>'.$lastviewedTitle.'</h3>';
             echo '<ul class="lastViewedList">';
                 foreach ($idList as $id) {
 
                     global $wpdb;
                     $post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $id . "'", 'ARRAY_A');
+                    $the_post = get_post($id); //Gets post ID
+                    $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_post->post_content;
+                    $viewType = get_post_type($the_post);
+
+                    //get also the selected types
+                    $selected_posttypes = get_option('widget_lastViewed');
+                    $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : "";
 
                     if ($post_exists && $id != $currentVisitPostId ) {
-
-                        $the_post = get_post($id); //Gets post ID
-                        $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_post->post_content;
-                        $viewType = get_post_type($the_post);
-
-                        //get also the selected types
-                        $selected_posttypes = get_option('widget_lastViewed');
-                        $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : "";
-
-                        echo $visitPostId;
 
                         //Do not show types which aren't allowed
                         foreach ($selected_posttypes as $selected_type) {
 
-                            if ($selected_type == $viewType) {
+                            if ($selected_type == $viewType && $count < $lastViewed_total ) {
+                                $count++;
+                                echo '<li class="clearfix">';
 
-
-                                if ($count < $lastViewed_total) {
-
-                                    $count++;
-                                    echo '<li class="clearfix">';
-
-                                    if ($lastViewed_thumb == 'yes' && has_post_thumbnail($id)) {
-                                        echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
-                                    }
-                                    echo '<div class="lastViewedcontent">';
-                                    echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
-                                    echo "<p class='lastViewedExcerpt'>" . substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' ')) . '...<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a></p>'; //stop afterfull word
-                                    echo '</div>';
-                                    echo '</li>';
+                                if ($lastViewed_thumb == 'yes' && has_post_thumbnail($id)) {
+                                    echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
                                 }
-
-
+                                echo '<div class="lastViewedcontent">';
+                                echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
+                                echo "<p class='lastViewedExcerpt'>" . substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' ')) . '...<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a></p>'; //stop afterfull word
+                                echo '</div>';
+                                echo '</li>';
                             }
                         }
                     }
