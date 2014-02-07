@@ -18,11 +18,6 @@
     visibility: hidden;
     font-size: 0;
 }
-
-
 .lastViewedThumb {float: left; margin: 6px 6px 6px 0;}
 .lastViewedThumb img {width: 48px;}
-
 .lastViewedTitle {font-weight: bold;}
-
-

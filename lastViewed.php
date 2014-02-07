@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 1.2
+Version: 1.2.1
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed widget
 Author: Wouter Dijkstra
@@ -38,11 +38,17 @@ function dd_lastviewed_add_front()
     wp_enqueue_style( 'dd_lastviewed_css' );
 
     if (is_singular()) {
-        //Set a hidden input to get always the id of the single or page.
-        echo'<input id="LastViewed_ID" type="hidden" data-id="' . get_the_id() . '">';
         wp_enqueue_script('jquery');
         wp_enqueue_script( 'jquery-cookie', plugins_url( '/js/jquery.cookie.js', __FILE__ ) , array( 'jquery' ), '' );
         wp_enqueue_script( 'dd_js_lastviewed', plugins_url( '/js/lastViewed.js', __FILE__ ) , array( 'jquery','jquery-cookie' ), '' );
     }
 }
 add_action( 'wp_enqueue_scripts', 'dd_lastviewed_add_front' );
+
+function add_lastviewed_id() {
+    if (is_singular()) {
+        //Set a hidden input to get always the id of the single or page.
+        echo'<input id="LastViewed_ID" type="hidden" data-id="' . get_the_id() . '">';
+    }
+}
+add_action('wp_footer', 'add_lastviewed_id');
