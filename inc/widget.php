@@ -23,7 +23,7 @@ class lastviewed extends WP_Widget
         $output = 'names'; // names or objects, note names is the default
         $operator = 'and'; // 'and' or 'or'
         $custom_post_types = get_post_types($args, $output, $operator);
-        $default_post_types= $post_types = get_post_types('', 'names');
+        $default_post_types = get_post_types('', 'names');
         $post_types = array_merge($custom_post_types, $default_post_types);
         $lastViewed_thumb = isset($instance['lastViewed_thumb']) ? $instance['lastViewed_thumb'] : "";
         $lastViewed_thumb = esc_attr($lastViewed_thumb);
@@ -48,7 +48,7 @@ class lastviewed extends WP_Widget
             $RealName = $obj->labels->name;
             $selected_posttypes = isset($instance['selected_posttypes']) ? $instance['selected_posttypes'] : "";
 
-            if (in_array($post_type, array('page','attachment','revision','nav_menu_item'))) {
+            if (in_array($post_type, array('attachment','revision','nav_menu_item'))) {
                 break;
             }
             $option = '<label>';
@@ -77,11 +77,13 @@ class lastviewed extends WP_Widget
             <input type="number" name="' . $this->get_field_name('lastViewed_truncate') . '" min="1" max="10" value="' . $lastViewed_truncate . '"></p>
             <p><label>Link name:<label>
              <input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'"></p>
-             <p style="font-size: 11px; opacity:0.6">
-            <span class="shortcodeTtitle">Shortcode:</span>
-            <span class="shortcode">[dd_lastviewed widget_id="'.$widgetID.'"]</span>
-            </p>
-        ';
+             <p style="font-size: 11px; opacity:0.6">';
+
+        if (is_numeric($widgetID)){
+            echo '<span class="shortcodeTtitle">Shortcode:</span>
+            <span class="shortcode">[dd_lastviewed widget_id="'.$widgetID.'"]</span>';
+        }
+        echo '</p>';
     }
 
     function update($new_instance, $old_instance)
@@ -119,13 +121,14 @@ class lastviewed extends WP_Widget
         if (isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
 
             echo $before_widget;
-            echo '<h3>'.$lastviewedTitle.'</h3>';
+            echo $before_title.$lastviewedTitle.$after_title;
             echo '<ul class="lastViewedList">';
                 foreach ($idList as $id) {
 
                     global $wpdb;
-                    $post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $id . "'", 'ARRAY_A');
+//                    $post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $id . "'", 'ARRAY_A');
                     $the_post = get_post($id); //Gets post ID
+
                     $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_post->post_content;
                     $viewType = get_post_type($the_post);
 
@@ -133,7 +136,7 @@ class lastviewed extends WP_Widget
                     $selected_posttypes = get_option('widget_lastViewed');
                     $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : "";
 
-                    if ($post_exists && $id != $currentVisitPostId ) {
+                    if ($the_post && $id != $currentVisitPostId ) {
 
                         //Do not show types which aren't allowed
                         foreach ($selected_posttypes as $selected_type) {
