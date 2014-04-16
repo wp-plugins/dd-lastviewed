@@ -1,0 +1,14 @@
+@import 'bourbon/bourbon';
+
+.lastViewedList li{
+  @include clearfix;
+}
+.lastViewedThumb {
+    float: left;
+    margin: 6px 6px 6px 0;
+
+    img {
+      width: 48px;
+    }
+}
+.lastViewedTitle {font-weight: bold;}

@@ -1,0 +1,15 @@
+@import 'fonts';
+
+#available-widgets [class*=lastviewed] .widget-title:before{
+  font-family: 'custom_dashicons';
+  content: "\e605";
+  top: -4px;
+}
+
+#widget-list [id*= lastviewed] .widget-title h4:before,
+#widgets-right [id*= lastviewed] .widget-title h4:before{
+  font-family: 'custom_dashicons';
+  content: "\e605";
+  float: left;
+  margin: 0px 6px 0px 0px;
+}

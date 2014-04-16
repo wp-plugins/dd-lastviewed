@@ -3,12 +3,12 @@ Contributors: Mosterd3d
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=5V2C94HQAN63C&lc=US&item_name=Dijkstra%20Design&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget, recent, visit, visited
 Requires at least: 3.3
-Tested up to: 3.8
-Stable tag: 1.2.2
+Tested up to: 3.9
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Just another last-viewed widget. To show the last visited posts and custom posttypes. The widget handles like a default widget. It's fully customizable.
+Just another DijkstraDesign widget. Shows the users recently viewed posts,pages and or custom posttypes in a widget.
 
 == Description ==
 
@@ -16,7 +16,7 @@ This plugin contains the lastViewed-widget. This widget displays the last visite
 
 The widget is fully set. 
 
-* Choose which posttypes should be shown
+* Choose the types
 * Set the maximum
 * Set thumbnail on/off
 * Set the excerpt length
@@ -48,6 +48,12 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 1.3 =
+* Added SASS
+* Added Widget admin Icon
+* Bugfix: hide widget when no type is selected
+* Branding: catch the eye ;)
 
 = 1.2.2 =
 * Added pages
