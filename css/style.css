@@ -1,23 +1,16 @@
-/* float clearing for IE6 */
-.clearfix{
-    height: 1%;
-    overflow: visible;
-}
+.lastViewedList li {
+  *zoom: 1; }
+  .lastViewedList li:before, .lastViewedList li:after {
+    content: " ";
+    display: table; }
+  .lastViewedList li:after {
+    clear: both; }
 
-/* float clearing for IE7 */
-.clearfix{
-    min-height: 1%;
-}
+.lastViewedThumb {
+  float: left;
+  margin: 6px 6px 6px 0; }
+  .lastViewedThumb img {
+    width: 48px; }
 
-/* float clearing for everyone else */
-.clearfix:after{
-    clear: both;
-    content: ".";
-    display: block;
-    height: 0;
-    visibility: hidden;
-    font-size: 0;
-}
-.lastViewedThumb {float: left; margin: 6px 6px 6px 0;}
-.lastViewedThumb img {width: 48px;}
-.lastViewedTitle {font-weight: bold;}
+.lastViewedTitle {
+  font-weight: bold; }

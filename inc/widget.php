@@ -10,7 +10,7 @@ class lastviewed extends WP_Widget
 {
     function lastviewed()
     {
-        parent::WP_Widget(false, 'Last viewed', array('description' => __('Shows the last viewed of a post or custom posttype.', 'text_domain'),));
+        parent::WP_Widget(false, 'DD Last Viewed', array('description' => __('A list of the recently viewed posts, pages or custom posttypes.', 'text_domain'),));
     }
 
     function form($instance)
@@ -115,10 +115,13 @@ class lastviewed extends WP_Widget
         $idList = array_reverse($idList);
         $count = 0;
         $currentVisitPostId = get_the_ID();
+        //get also the selected types
+        $selected_posttypes = get_option('widget_lastViewed');
+        $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : false;
 
         extract($args, EXTR_SKIP);
 
-        if (isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
+        if ($selected_posttypes && isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
 
             echo $before_widget;
             echo $before_title.$lastviewedTitle.$after_title;
@@ -132,9 +135,7 @@ class lastviewed extends WP_Widget
                     $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_post->post_content;
                     $viewType = get_post_type($the_post);
 
-                    //get also the selected types
-                    $selected_posttypes = get_option('widget_lastViewed');
-                    $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : "";
+
 
                     if ($the_post && $id != $currentVisitPostId ) {
 
@@ -143,7 +144,7 @@ class lastviewed extends WP_Widget
 
                             if ($selected_type == $viewType && $count < $lastViewed_total ) {
                                 $count++;
-                                echo '<li class="clearfix">';
+                                echo '<li>';
 
                                 if ($lastViewed_thumb == 'yes' && has_post_thumbnail($id)) {
                                     echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
