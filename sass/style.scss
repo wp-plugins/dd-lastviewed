@@ -1,6 +1,6 @@
 @import 'bourbon/bourbon';
 
-.lastViewedList li{
+.lastViewedList li.clearfix{
   @include clearfix;
 }
 .lastViewedThumb {

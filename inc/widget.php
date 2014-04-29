@@ -132,7 +132,9 @@ class lastviewed extends WP_Widget
 //                    $post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $id . "'", 'ARRAY_A');
                     $the_post = get_post($id); //Gets post ID
 
-                    $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_post->post_content;
+                    $the_content = strip_shortcodes( $the_post->post_content );
+                    $the_content = wp_strip_all_tags( $the_content, $remove_breaks );
+                    $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_content; //get_the_excerpt($the_post);
                     $viewType = get_post_type($the_post);
 
 
@@ -144,9 +146,13 @@ class lastviewed extends WP_Widget
 
                             if ($selected_type == $viewType && $count < $lastViewed_total ) {
                                 $count++;
-                                echo '<li>';
 
-                                if ($lastViewed_thumb == 'yes' && has_post_thumbnail($id)) {
+                                $hasThumb = $lastViewed_thumb == 'yes' && has_post_thumbnail($id) ? true : false;
+
+                                $clearfix = $hasThumb ? "class='clearfix'" : "";
+                                echo '<li '.$clearfix.'>';
+
+                                if ($hasThumb) {
                                     echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
                                 }
                                 echo '<div class="lastViewedcontent">';
