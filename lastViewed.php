@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 1.4
+Version: 2.0
 Plugin URI: http://dijkstradesign.com
-Description: A plug-in to add a last viewed widget
+Description: A plug-in to add a last viewed/visited widget
 Author: Wouter Dijkstra
 Author URI: http://dijkstradesign.com
 */
 
 
-/*  Copyright 2013  WOUTER DIJKSTRA  (email : info@dijkstradesign.nl)
+/*  Copyright 2014  WOUTER DIJKSTRA  (email : info@dijkstradesign.nl)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -50,6 +50,10 @@ function dd_lastviewed_admin()
 {
     wp_register_style( 'dd_lastviewed_admin_styles', plugins_url('/css/admin-style.css', __FILE__) );
     wp_enqueue_style( 'dd_lastviewed_admin_styles' );
+
+    wp_enqueue_script('jquery');
+    wp_enqueue_script( 'dd_js_admin-lastviewed', plugins_url( '/js/admin-lastViewed.js', __FILE__ ) , array( 'jquery' ), '' );
+
 }
 add_action( 'admin_init', 'dd_lastviewed_admin' );
 

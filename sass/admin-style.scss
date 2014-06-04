@@ -1,3 +1,4 @@
+@import 'bourbon/bourbon';
 @import 'fonts';
 
 #available-widgets [class*=lastviewed] .widget-title:before{
@@ -12,4 +13,84 @@
   content: "\e605";
   float: left;
   margin: 0px 6px 0px 0px;
+}
+
+.dd-switch{
+  width: 28px;
+  overflow: hidden;
+  border: solid 1px #e5e5e5;
+  border-radius: 7px;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  margin: -4px 4px 0 0;
+
+  & + input{
+    display: none;
+  }
+
+  .switchHolder{
+    width: 40px;
+    height: 14px;
+    position: relative;
+    margin-left: -50%;
+    transition: margin 0.15s;
+    -webkit-transition: margin 0.15s; /* Safari */
+
+    .onSquare{
+      width: 30px;
+      height: 100%;
+      position: absolute;
+      left: -10px;
+      padding: 0;
+      box-shadow: none;
+      border: none;
+      z-index: 0;
+
+
+    }
+    .buttonSwitch{
+      position: absolute;
+      left: 50%;
+      height: 14px;
+      display: block;
+      width:14px;
+      margin-left: -7px;
+      border-radius: 50%;
+      padding: 0;
+      z-index: 2;
+      color: #555;
+      border-color: #ccc;
+      background: #f7f7f7;
+      -webkit-box-shadow: inset 0 1px 0 #fff,0 1px 0 rgba(0,0,0,.08);
+      box-shadow: inset 0 1px 0 #fff,0 1px 0 rgba(0,0,0,.08);
+    }
+    .offSquare{
+      width: 30px;
+      height: 100%;
+      position: absolute;
+      right: -10px;
+      background: #f1f1f1;
+
+      &:hover{
+        background: #e5e5e5;
+      }
+      &:active{
+        background: #c5c5c5;
+      }
+    }
+  }
+
+  &.on{
+    .switchHolder{
+      margin-left: 1px;
+      
+    }
+
+  }
+}
+
+.LV_setting_row {
+  margin: 1em 0;
 }
