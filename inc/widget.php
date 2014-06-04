@@ -25,10 +25,6 @@ class lastviewed extends WP_Widget
         $custom_post_types = get_post_types($args, $output, $operator);
         $default_post_types = get_post_types('', 'names');
         $post_types = array_merge($custom_post_types, $default_post_types);
-        $lastViewed_thumb = isset($instance['lastViewed_thumb']) ? $instance['lastViewed_thumb'] : "";
-        $lastViewed_thumb = esc_attr($lastViewed_thumb);
-        $yesSelect = ($lastViewed_thumb == 'yes') ? "checked" : "";
-        $noSelect = ($lastViewed_thumb != 'yes') ? "checked" : "";
         $lastViewed_total = isset($instance['lastViewed_total']) ? $instance['lastViewed_total'] : 5;
         $lastViewed_total = esc_attr($lastViewed_total);
         $lastViewed_truncate = isset($instance['lastViewed_truncate']) ? $instance['lastViewed_truncate'] : 78;
@@ -36,10 +32,20 @@ class lastviewed extends WP_Widget
         $lastViewed_linkname = isset($instance['lastViewed_linkname']) ? $instance['lastViewed_linkname'] : "More";
         $lastViewed_linkname = esc_attr($lastViewed_linkname);
 
+        $lastViewed_showPostTitle = isset( $instance['lastViewed_showPostTitle'] ) ? (bool) $instance['lastViewed_showPostTitle'] : false;
+        $lastViewed_showThumb = isset( $instance['lastViewed_showThumb'] ) ? (bool) $instance['lastViewed_showThumb'] : false;
+        $lastViewed_showExcerpt = isset( $instance['lastViewed_showExcerpt'] ) ? (bool) $instance['lastViewed_showExcerpt'] : false;
+
+        $lastViewed_showMore = isset( $instance['lastViewed_showMore'] ) ? (bool) $instance['lastViewed_showMore'] : false;
+
+
         echo '<p>';
         echo '<label for="'.$fieldID.'">Titel:</label>';
         echo '<input id="'.$fieldID.'" class=" widefat textWrite_Title" type="text" value="'.esc_attr($lastviewedTitle).'"name="'.$fieldName.'">';
         echo '</p>';
+        echo '<p><label>Number of items to show: <label>
+            <input type="number" name="' . $this->get_field_name('lastViewed_total') . '" min="1" max="10" value="' . $lastViewed_total . '"></p>';
+        echo '<hr>';
         echo '<p class="typeholder">Select the types:<br/>';
 
         foreach ($post_types as $post_type) {
@@ -65,25 +71,61 @@ class lastviewed extends WP_Widget
             $option .= '</label><br/>';
             echo $option;
         }
-        echo '
-            </p>
-            <p><label>Show thumbnails if excist:</label><br>
-            <label class="set_thumb"><input type="radio" name="' . $this->get_field_name('lastViewed_thumb') . '" value="no" ' . $noSelect . ' />No</label><br/>
-            <label class="set_thumb"><input type="radio" name="' . $this->get_field_name('lastViewed_thumb') . '" value="yes" ' . $yesSelect . '/>Yes</label><br/>
-            </p>
-            <p><label>Number to show:<label>
-            <input type="number" name="' . $this->get_field_name('lastViewed_total') . '" min="1" max="10" value="' . $lastViewed_total . '"></p>
-            <p><label>Truncate excerpt:<label>
-            <input type="number" name="' . $this->get_field_name('lastViewed_truncate') . '" min="1" max="10" value="' . $lastViewed_truncate . '"></p>
-            <p><label>Link name:<label>
-             <input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'"></p>
-             <p style="font-size: 11px; opacity:0.6">';
+        echo '</p>';
+
+
+        echo '<hr>';
+
+        $checked = $lastViewed_showPostTitle == true ? 'checked="checked"' : '';
+        $showTitle = '<p class="showTitle LV_setting_row"> ';
+        $showTitle .= inputSwitch($lastViewed_showPostTitle);
+        $showTitle .= '<input id="lastViewed_showPostTitle" name="' .$this->get_field_name('lastViewed_showPostTitle').'" type="checkbox" '.$checked.'/>';
+        $showTitle .= __('Display Item Title');
+        $showTitle .= '</p>';
+
+        echo $showTitle;
+
+
+        $checked = $lastViewed_showThumb == true ? 'checked="checked"' : '';
+        $showThumb = '<p class="showThumb LV_setting_row"> ';
+        $showThumb .= inputSwitch($lastViewed_showThumb);
+        $showThumb .= '<input id="lastViewed_showThumb" name="' .$this->get_field_name('lastViewed_showThumb').'" type="checkbox" '.$checked.'/>';
+        $showThumb .= __('Display Thumbnail (if excist)');
+        $showThumb .= '</p>';
+
+        echo $showThumb;
+
+        $checked = $lastViewed_showExcerpt == true ? 'checked="checked"' : '';
+        $showExcerpt = '<p class="showExcerpt LV_setting_row"> ';
+        $showExcerpt .= inputSwitch($lastViewed_showExcerpt);
+        $showExcerpt .= '<input id="lastViewed_showExcerpt" name="' .$this->get_field_name('lastViewed_showExcerpt').'" type="checkbox" '.$checked.'/>';
+        $showExcerpt .= __('Display Excerpt').'  ';
+        $showExcerpt .= '<input type="number" name="' . $this->get_field_name('lastViewed_truncate') . '" min="1" max="10" value="' . $lastViewed_truncate . '">';
+        $showExcerpt .= '  '.__('Characters');
+        $showExcerpt .= '</p>';
+
+        echo $showExcerpt;
+
+        $checked = $lastViewed_showMore == true ? 'checked="checked"' : '';
+        $showMore = '<p class="showMore LV_setting_row"> ';
+        $showMore .= inputSwitch($lastViewed_showMore);
+        $showMore .= '<input id="lastViewed_showMore" name="' .$this->get_field_name('lastViewed_showMore').'" type="checkbox" '.$checked.'/>';
+        $showMore .= __('Display Breaklink').'   ';
+        $showMore .= '<input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'">';
+        $showMore .= '</p>';
+
+        echo $showMore;
+
+        echo '<hr>';
 
         if (is_numeric($widgetID)){
-            echo '<span class="shortcodeTtitle">Shortcode:</span>
-            <span class="shortcode">[dd_lastviewed widget_id="'.$widgetID.'"]</span>';
+
+            echo '<p style="font-size: 11px; opacity:0.6">';
+            echo '<span class="shortcodeTtitle">Shortcode:</span>';
+            echo '<span class="shortcode">[dd_lastviewed widget_id="'.$widgetID.'"]</span>';
+            echo '</p>';
+
         }
-        echo '</p>';
     }
 
     function update($new_instance, $old_instance)
@@ -96,8 +138,13 @@ class lastviewed extends WP_Widget
         $instance['lastViewed_total'] = strip_tags($new_instance['lastViewed_total']);
         $instance['lastViewed_truncate'] = strip_tags($new_instance['lastViewed_truncate']);
         $instance['lastViewed_linkname'] = strip_tags($new_instance['lastViewed_linkname']);
+
+        $instance['lastViewed_showPostTitle'] = (bool) $new_instance['lastViewed_showPostTitle'];
+        $instance['lastViewed_showThumb'] = (bool) $new_instance['lastViewed_showThumb'];
+        $instance['lastViewed_showExcerpt'] = (bool) $new_instance['lastViewed_showExcerpt'];
+        $instance['lastViewed_showMore'] = (bool) $new_instance['lastViewed_showMore'];
+
         return $instance;
-        return $new_instance;
     }
 
     function widget($args)
@@ -110,6 +157,13 @@ class lastviewed extends WP_Widget
         $lastViewed_total = $widgetOptions[$widgetID]['lastViewed_total'];
         $lastViewed_truncate = $widgetOptions[$widgetID]['lastViewed_truncate'] ? $widgetOptions[$widgetID]['lastViewed_truncate'] : 78;
         $lastViewed_linkname = $widgetOptions[$widgetID]['lastViewed_linkname'];
+
+        $lastViewed_showPostTitle = $widgetOptions[$widgetID]['lastViewed_showPostTitle'];
+        $lastViewed_showThumb = $widgetOptions[$widgetID]['lastViewed_showThumb'];
+        $lastViewed_showExcerpt = $widgetOptions[$widgetID]['lastViewed_showExcerpt'];
+
+        $lastViewed_showMore = $widgetOptions[$widgetID]['lastViewed_showMore'];
+
         $lastlist = ($_COOKIE['lastViewed']);
         $idList = explode(",", $lastlist);
         $idList = array_reverse($idList);
@@ -128,8 +182,6 @@ class lastviewed extends WP_Widget
             echo '<ul class="lastViewedList">';
                 foreach ($idList as $id) {
 
-                    global $wpdb;
-//                    $post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $id . "'", 'ARRAY_A');
                     $the_post = get_post($id); //Gets post ID
 
                     $the_content = strip_shortcodes( $the_post->post_content );
@@ -147,17 +199,44 @@ class lastviewed extends WP_Widget
                             if ($selected_type == $viewType && $count < $lastViewed_total ) {
                                 $count++;
 
-                                $hasThumb = $lastViewed_thumb == 'yes' && has_post_thumbnail($id) ? true : false;
-
+                                $hasThumb = $lastViewed_showThumb && has_post_thumbnail($id) ? $lastViewed_showThumb : false;
                                 $clearfix = $hasThumb ? "class='clearfix'" : "";
+
                                 echo '<li '.$clearfix.'>';
 
-                                if ($hasThumb) {
+                                if ($hasThumb && $lastViewed_showPostTitle | $lastViewed_showExcerpt) {
                                     echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
                                 }
+                                elseif ($hasThumb && !$lastViewed_showPostTitle && !$lastViewed_showExcerpt) {
+                                    echo '<a class="lastViewedThumb" href="' . get_permalink($id) . '">'.get_the_post_thumbnail($id).'</a>';
+                                }
+
                                 echo '<div class="lastViewedcontent">';
-                                echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
-                                echo "<p class='lastViewedExcerpt'>" . substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' ')) . '...<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a></p>'; //stop afterfull word
+
+                                if($lastViewed_showPostTitle){
+                                    echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
+                                }
+
+                                $the_excerpt =  substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' '));
+
+                                if(!$lastViewed_showPostTitle && $lastViewed_showExcerpt){
+
+                                    echo '<a href="' . get_permalink($id) . '" class="lastViewedExcerpt">'.$the_excerpt;
+                                        if($lastViewed_showMore){
+                                            echo '<span class="more">'.$lastViewed_linkname.'</span>';
+                                        }
+                                     echo '</a>';
+
+                                }
+                                elseif($lastViewed_showPostTitle && $lastViewed_showExcerpt){
+                                    echo "<p class='lastViewedExcerpt'>" .$the_excerpt;
+                                        if($lastViewed_showMore){
+                                            echo '<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a>';
+                                        }
+                                    echo '</p>'; //stop afterfull word
+                                }
+
+
                                 echo '</div>';
                                 echo '</li>';
                             }
@@ -170,3 +249,20 @@ class lastviewed extends WP_Widget
     }
 }
 add_action('widgets_init', create_function('', 'return register_widget("lastviewed");'));
+
+
+function inputSwitch($value){
+
+    $status = $value == '1' ? 'on' : '';
+
+    return '
+                <div class="dd-switch '.$status.'">
+                    <div class="switchHolder">
+                        <div class="onSquare button-primary"></div>
+                        <div class="buttonSwitch"></div>
+                        <div class="offSquare"></div>
+                    </div>
+                </div>';
+
+}
+
