@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 2.0
+Version: 2.1
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed/visited widget
 Author: Wouter Dijkstra
@@ -40,7 +40,7 @@ function dd_lastviewed_add_front()
     if (is_singular()) {
         wp_enqueue_script('jquery');
         wp_enqueue_script( 'jquery-cookie', plugins_url( '/js/jquery.cookie.js', __FILE__ ) , array( 'jquery' ), '' );
-        wp_enqueue_script( 'dd_js_lastviewed', plugins_url( '/js/lastViewed.js', __FILE__ ) , array( 'jquery','jquery-cookie' ), '' );
+        wp_enqueue_script( 'dd_js_lastviewed', plugins_url( '/js/lastviewed.js', __FILE__ ) , array( 'jquery','jquery-cookie' ), '' );
     }
 }
 add_action( 'wp_enqueue_scripts', 'dd_lastviewed_add_front' );
@@ -52,7 +52,7 @@ function dd_lastviewed_admin()
     wp_enqueue_style( 'dd_lastviewed_admin_styles' );
 
     wp_enqueue_script('jquery');
-    wp_enqueue_script( 'dd_js_admin-lastviewed', plugins_url( '/js/admin-lastViewed.js', __FILE__ ) , array( 'jquery' ), '' );
+    wp_enqueue_script( 'dd_js_admin-lastviewed', plugins_url( '/js/admin-lastviewed.js', __FILE__ ) , array( 'jquery' ), '' );
 
 }
 add_action( 'admin_init', 'dd_lastviewed_admin' );
