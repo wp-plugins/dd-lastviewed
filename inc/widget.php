@@ -77,42 +77,42 @@ class lastviewed extends WP_Widget
         echo '<hr>';
 
         $checked = $lastViewed_showPostTitle == true ? 'checked="checked"' : '';
-        $showTitle = '<p class="showTitle LV_setting_row"> ';
+        $showTitle = '<div class="showTitle LV_setting_row"> ';
         $showTitle .= inputSwitch($lastViewed_showPostTitle);
         $showTitle .= '<input id="lastViewed_showPostTitle" name="' .$this->get_field_name('lastViewed_showPostTitle').'" type="checkbox" '.$checked.'/>';
         $showTitle .= __('Display Item Title');
-        $showTitle .= '</p>';
+        $showTitle .= '</div>';
 
         echo $showTitle;
 
 
         $checked = $lastViewed_showThumb == true ? 'checked="checked"' : '';
-        $showThumb = '<p class="showThumb LV_setting_row"> ';
+        $showThumb = '<div class="showThumb LV_setting_row"> ';
         $showThumb .= inputSwitch($lastViewed_showThumb);
         $showThumb .= '<input id="lastViewed_showThumb" name="' .$this->get_field_name('lastViewed_showThumb').'" type="checkbox" '.$checked.'/>';
         $showThumb .= __('Display Thumbnail (if excist)');
-        $showThumb .= '</p>';
+        $showThumb .= '</div>';
 
         echo $showThumb;
 
         $checked = $lastViewed_showExcerpt == true ? 'checked="checked"' : '';
-        $showExcerpt = '<p class="showExcerpt LV_setting_row"> ';
+        $showExcerpt = '<div class="showExcerpt LV_setting_row"> ';
         $showExcerpt .= inputSwitch($lastViewed_showExcerpt);
         $showExcerpt .= '<input id="lastViewed_showExcerpt" name="' .$this->get_field_name('lastViewed_showExcerpt').'" type="checkbox" '.$checked.'/>';
         $showExcerpt .= __('Display Excerpt').'  ';
         $showExcerpt .= '<input type="number" name="' . $this->get_field_name('lastViewed_truncate') . '" min="1" max="10" value="' . $lastViewed_truncate . '">';
         $showExcerpt .= '  '.__('Characters');
-        $showExcerpt .= '</p>';
+        $showExcerpt .= '</div>';
 
         echo $showExcerpt;
 
         $checked = $lastViewed_showMore == true ? 'checked="checked"' : '';
-        $showMore = '<p class="showMore LV_setting_row"> ';
+        $showMore = '<div class="showMore LV_setting_row"> ';
         $showMore .= inputSwitch($lastViewed_showMore);
         $showMore .= '<input id="lastViewed_showMore" name="' .$this->get_field_name('lastViewed_showMore').'" type="checkbox" '.$checked.'/>';
         $showMore .= __('Display Breaklink').'   ';
         $showMore .= '<input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'">';
-        $showMore .= '</p>';
+        $showMore .= '</div>';
 
         echo $showMore;
 
