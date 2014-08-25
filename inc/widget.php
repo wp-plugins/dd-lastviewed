@@ -147,7 +147,7 @@ class lastviewed extends WP_Widget
         return $instance;
     }
 
-    function widget($args)
+    function widget($args , $instance)
     {
         $widgetID = $args['widget_id'];
         $widgetID = str_replace('lastviewed-', '', $widgetID);
