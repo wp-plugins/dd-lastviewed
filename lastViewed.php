@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 2.1.2
+Version: 2.2
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed/visited widget
 Author: Wouter Dijkstra
@@ -28,10 +28,6 @@ Author URI: http://dijkstradesign.com
 require_once('inc/widget.php');
 require_once('inc/shortcode.php');
 
-/**
- *   Enqueue plugin style-file (CSS) and js file for frontend
- */
-
 function dd_lastviewed_add_front()
 {
     wp_register_style( 'dd_lastviewed_css', plugins_url('/css/style.css', __FILE__) );
@@ -44,7 +40,6 @@ function dd_lastviewed_add_front()
     }
 }
 add_action( 'wp_enqueue_scripts', 'dd_lastviewed_add_front' );
-
 
 function dd_lastviewed_admin()
 {
