@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dijkstradesign
- * Date: 04-01-14
- * Time: 13:02
- */
 
 class lastviewed extends WP_Widget
 {
@@ -34,6 +28,9 @@ class lastviewed extends WP_Widget
 
         $lastViewed_showPostTitle = isset( $instance['lastViewed_showPostTitle'] ) ? (bool) $instance['lastViewed_showPostTitle'] : false;
         $lastViewed_showThumb = isset( $instance['lastViewed_showThumb'] ) ? (bool) $instance['lastViewed_showThumb'] : false;
+        $lastViewed_thumbSize = isset($instance['lastViewed_thumbSize']) ? $instance['lastViewed_thumbSize'] : "thumbnail";
+        $lastViewed_thumbSize = esc_attr($lastViewed_thumbSize);
+
         $lastViewed_showExcerpt = isset( $instance['lastViewed_showExcerpt'] ) ? (bool) $instance['lastViewed_showExcerpt'] : false;
 
         $lastViewed_showMore = isset( $instance['lastViewed_showMore'] ) ? (bool) $instance['lastViewed_showMore'] : false;
@@ -90,7 +87,15 @@ class lastviewed extends WP_Widget
         $showThumb = '<div class="showThumb LV_setting_row"> ';
         $showThumb .= inputSwitch($lastViewed_showThumb);
         $showThumb .= '<input id="lastViewed_showThumb" name="' .$this->get_field_name('lastViewed_showThumb').'" type="checkbox" '.$checked.'/>';
-        $showThumb .= __('Display Thumbnail (if excist)');
+        $showThumb .= __('Display Thumbnail');
+            $all_sizes = get_intermediate_image_sizes();
+            $dropdown = '<select name="'.$this->get_field_name('lastViewed_thumbSize').'">';
+                foreach($all_sizes as $size){
+                    $selected = $lastViewed_thumbSize == $size ? 'selected' : '';
+                    $dropdown .= '<option value="'.$size.'" '.$selected.'>'.$size.'</option>';
+                }
+            $dropdown .= '</select>';
+        $showThumb .= $dropdown;
         $showThumb .= '</div>';
 
         echo $showThumb;
@@ -138,9 +143,9 @@ class lastviewed extends WP_Widget
         $instance['lastViewed_total'] = strip_tags($new_instance['lastViewed_total']);
         $instance['lastViewed_truncate'] = strip_tags($new_instance['lastViewed_truncate']);
         $instance['lastViewed_linkname'] = strip_tags($new_instance['lastViewed_linkname']);
-
         $instance['lastViewed_showPostTitle'] = (bool) $new_instance['lastViewed_showPostTitle'];
         $instance['lastViewed_showThumb'] = (bool) $new_instance['lastViewed_showThumb'];
+        $instance['lastViewed_thumbSize'] = strip_tags($new_instance['lastViewed_thumbSize']);
         $instance['lastViewed_showExcerpt'] = (bool) $new_instance['lastViewed_showExcerpt'];
         $instance['lastViewed_showMore'] = (bool) $new_instance['lastViewed_showMore'];
 
@@ -153,13 +158,12 @@ class lastviewed extends WP_Widget
         $widgetID = str_replace('lastviewed-', '', $widgetID);
         $widgetOptions = get_option($this->option_name);
         $lastviewedTitle = $widgetOptions[$widgetID]['lastviewedTitle'];
-        $lastViewed_thumb = $widgetOptions[$widgetID]['lastViewed_thumb'];
         $lastViewed_total = $widgetOptions[$widgetID]['lastViewed_total'];
         $lastViewed_truncate = $widgetOptions[$widgetID]['lastViewed_truncate'] ? $widgetOptions[$widgetID]['lastViewed_truncate'] : 78;
         $lastViewed_linkname = $widgetOptions[$widgetID]['lastViewed_linkname'];
-
         $lastViewed_showPostTitle = $widgetOptions[$widgetID]['lastViewed_showPostTitle'];
         $lastViewed_showThumb = $widgetOptions[$widgetID]['lastViewed_showThumb'];
+        $lastViewed_thumbSize = $widgetOptions[$widgetID]['lastViewed_thumbSize'];
         $lastViewed_showExcerpt = $widgetOptions[$widgetID]['lastViewed_showExcerpt'];
 
         $lastViewed_showMore = $widgetOptions[$widgetID]['lastViewed_showMore'];
@@ -205,10 +209,10 @@ class lastviewed extends WP_Widget
                                 echo '<li '.$clearfix.'>';
 
                                 if ($hasThumb && $lastViewed_showPostTitle | $lastViewed_showExcerpt) {
-                                    echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id).'</div>';
+                                    echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id, $lastViewed_thumbSize).'</div>';
                                 }
                                 elseif ($hasThumb && !$lastViewed_showPostTitle && !$lastViewed_showExcerpt) {
-                                    echo '<a class="lastViewedThumb" href="' . get_permalink($id) . '">'.get_the_post_thumbnail($id).'</a>';
+                                    echo '<a class="lastViewedThumb" href="' . get_permalink($id) . '">'.get_the_post_thumbnail($id, $lastViewed_thumbSize).'</a>';
                                 }
 
                                 echo '<div class="lastViewedcontent">';
@@ -263,6 +267,4 @@ function inputSwitch($value){
                         <div class="offSquare"></div>
                     </div>
                 </div>';
-
 }
-

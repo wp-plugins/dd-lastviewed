@@ -1,3 +1,6 @@
+.lastViewedList{
+    list-style-type: none;
+}
 .lastViewedList li.clearfix {
   *zoom: 1; }
   .lastViewedList li.clearfix:before, .lastViewedList li.clearfix:after {

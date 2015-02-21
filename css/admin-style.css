@@ -166,3 +166,8 @@
 
 .LV_setting_row {
   margin: 1em 0; }
+
+.LV_setting_row input,
+.LV_setting_row select{
+    margin: 0 6px;
+}

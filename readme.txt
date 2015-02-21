@@ -3,8 +3,8 @@ Contributors: Mosterd3d
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=5V2C94HQAN63C&lc=US&item_name=Dijkstra%20Design&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget, recent, visit, visited
 Requires at least: 3.3
-Tested up to: 3.9.1
-Stable tag: 2.1.2
+Tested up to: 4.1.1
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Just another DD widget. Shows the users recently viewed/visited posts,pages and 
 
 == Description ==
 
-This plugin contains the lastViewed-widget. This widget displays the last visited posts or custom posttypes of your visitor. 
+This plugin contains the lastViewed-widget. This widget displays the last visited posts, pages or custom posttypes of your visitor.
 
 The widget is fully set. 
 
@@ -21,9 +21,9 @@ The widget is fully set.
 * Set thumbnail on/off
 * Set the excerpt length
 
-The plugin sets a cookie that keeps track of the visited IDs. It uses jquery.cookie.js to make this possible. 
+The plugin sets a cookie that keeps track of the visited IDs. It uses jquery.cookie.js to make this possible.
 
-The widget looks for the cookie. So to activate the widget, the visitor has to go first to a single page of the selected posttypes to display the widget. 
+The widget searches for the cookie. So to activate the widget, the visitor has to go first to a single page of the selected posttypes to display the widget.
 
 == Installation ==
 
@@ -46,6 +46,9 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 2.2 =
+* Add select thumb-size
 
 = 2.1.2 =
 * Fix Strict standards widget

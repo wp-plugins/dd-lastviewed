@@ -1,5 +1,7 @@
 @import 'bourbon/bourbon';
-
+.lastViewedList{
+  list-style-type: none;
+}
 .lastViewedList li.clearfix{
   @include clearfix;
 }
