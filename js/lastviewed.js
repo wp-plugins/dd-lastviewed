@@ -8,7 +8,7 @@ jQuery(function($) {
         newList = $.grep(oldList, function(value) {
             return viewid != value;
         });
-        newList.splice(19); //set 19 values for max 20 with the push
+        newList.splice(39); //set 39 values for max 40 with the push
     }
     newList.push(viewid);
     $.cookie('lastViewed', newList, { expires:30, path:'/' });

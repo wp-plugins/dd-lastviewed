@@ -33,6 +33,11 @@ class lastviewed extends WP_Widget
 
         $lastViewed_showExcerpt = isset( $instance['lastViewed_showExcerpt'] ) ? (bool) $instance['lastViewed_showExcerpt'] : false;
 
+        $lastViewed_excerpt_type = isset( $instance['lastViewed_excerpt_type'] ) ? $instance['lastViewed_excerpt_type'] : false;
+        $lastViewed_excerpt_type = esc_attr($lastViewed_excerpt_type);
+
+        $lastViewed_showTruncate = isset( $instance['lastViewed_showTruncate'] ) ? (bool) $instance['lastViewed_showTruncate'] : false;
+
         $lastViewed_showMore = isset( $instance['lastViewed_showMore'] ) ? (bool) $instance['lastViewed_showMore'] : false;
 
 
@@ -101,15 +106,31 @@ class lastviewed extends WP_Widget
         echo $showThumb;
 
         $checked = $lastViewed_showExcerpt == true ? 'checked="checked"' : '';
+        $excerpt_type = $lastViewed_excerpt_type;
+        $type_c_checked = $excerpt_type == 'content' ? 'checked' : '';
+        $type_e_checked = $excerpt_type == 'excerpt' ? 'checked' : '';
+
         $showExcerpt = '<div class="showExcerpt LV_setting_row"> ';
         $showExcerpt .= inputSwitch($lastViewed_showExcerpt);
         $showExcerpt .= '<input id="lastViewed_showExcerpt" name="' .$this->get_field_name('lastViewed_showExcerpt').'" type="checkbox" '.$checked.'/>';
-        $showExcerpt .= __('Display Excerpt').'  ';
-        $showExcerpt .= '<input type="number" name="' . $this->get_field_name('lastViewed_truncate') . '" min="1" max="10" value="' . $lastViewed_truncate . '">';
-        $showExcerpt .= '  '.__('Characters');
+
+        $showExcerpt .= __('Display').'  ';
+        $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_excerpt_type').'" '.$type_c_checked.' value="content">Content</label>';
+        $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_excerpt_type').'" '.$type_e_checked.' value="excerpt">Excerpt</label>';
         $showExcerpt .= '</div>';
 
         echo $showExcerpt;
+
+        $checked = $lastViewed_showTruncate == true ? 'checked="checked"' : '';
+        $showTruncate = '<div class="showTruncate LV_setting_row"> ';
+        $showTruncate .= inputSwitch($lastViewed_showTruncate);
+        $showTruncate .= '<input id="lastViewed_showTruncate" name="' .$this->get_field_name('lastViewed_showTruncate').'" type="checkbox" '.$checked.'/>';
+        $showTruncate .= __('Truncate').'  ';
+        $showTruncate .= '<input type="number" name="' . $this->get_field_name('lastViewed_truncate') . '" min="1" max="10" value="' . $lastViewed_truncate . '">';
+        $showTruncate .= '  '.__('Characters');
+        $showTruncate .= '</div>';
+
+        echo $showTruncate;
 
         $checked = $lastViewed_showMore == true ? 'checked="checked"' : '';
         $showMore = '<div class="showMore LV_setting_row"> ';
@@ -147,6 +168,10 @@ class lastviewed extends WP_Widget
         $instance['lastViewed_showThumb'] = (bool) $new_instance['lastViewed_showThumb'];
         $instance['lastViewed_thumbSize'] = strip_tags($new_instance['lastViewed_thumbSize']);
         $instance['lastViewed_showExcerpt'] = (bool) $new_instance['lastViewed_showExcerpt'];
+
+        $instance['lastViewed_excerpt_type'] = strip_tags($new_instance['lastViewed_excerpt_type']);
+
+        $instance['lastViewed_showTruncate'] = (bool) $new_instance['lastViewed_showTruncate'];
         $instance['lastViewed_showMore'] = (bool) $new_instance['lastViewed_showMore'];
 
         return $instance;
@@ -159,12 +184,15 @@ class lastviewed extends WP_Widget
         $widgetOptions = get_option($this->option_name);
         $lastviewedTitle = $widgetOptions[$widgetID]['lastviewedTitle'];
         $lastViewed_total = $widgetOptions[$widgetID]['lastViewed_total'];
-        $lastViewed_truncate = $widgetOptions[$widgetID]['lastViewed_truncate'] ? $widgetOptions[$widgetID]['lastViewed_truncate'] : 78;
+        $lastViewed_truncate = $widgetOptions[$widgetID]['lastViewed_truncate'] ? $widgetOptions[$widgetID]['lastViewed_truncate'] : false;
         $lastViewed_linkname = $widgetOptions[$widgetID]['lastViewed_linkname'];
         $lastViewed_showPostTitle = $widgetOptions[$widgetID]['lastViewed_showPostTitle'];
         $lastViewed_showThumb = $widgetOptions[$widgetID]['lastViewed_showThumb'];
         $lastViewed_thumbSize = $widgetOptions[$widgetID]['lastViewed_thumbSize'];
         $lastViewed_showExcerpt = $widgetOptions[$widgetID]['lastViewed_showExcerpt'];
+
+        $lastViewed_excerpt_type = $widgetOptions[$widgetID]['lastViewed_excerpt_type'];
+        $lastViewed_showTruncate = $widgetOptions[$widgetID]['lastViewed_showTruncate'];
 
         $lastViewed_showMore = $widgetOptions[$widgetID]['lastViewed_showMore'];
 
@@ -190,7 +218,11 @@ class lastviewed extends WP_Widget
 
                     $the_content = strip_shortcodes( $the_post->post_content );
                     $the_content = wp_strip_all_tags( $the_content, $remove_breaks );
+
                     $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_content; //get_the_excerpt($the_post);
+                    $the_excerpt = $lastViewed_excerpt_type == 'content' ? $the_content : $the_excerpt;
+
+
                     $viewType = get_post_type($the_post);
 
 
@@ -221,7 +253,11 @@ class lastviewed extends WP_Widget
                                     echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
                                 }
 
-                                $the_excerpt =  substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' '));
+                                if($lastViewed_showTruncate){
+                                    $the_excerpt =  substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' '));
+                                }
+
+
 
                                 if(!$lastViewed_showPostTitle && $lastViewed_showExcerpt){
 
