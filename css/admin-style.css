@@ -171,3 +171,19 @@
 .LV_setting_row select{
     margin: 0 6px;
 }
+
+.content_rich{
+    display: inline-block;
+    font-size: 10px;
+}
+.content_rich label{
+}
+.content_rich input[type="radio"] {
+    min-width: 10px;
+    width: 10px;
+    height: 10px;
+}
+.content_rich input[type=radio]:checked:before{
+    margin: 1px;
+
+}
