@@ -36,6 +36,10 @@ class lastviewed extends WP_Widget
         $lastViewed_excerpt_type = isset( $instance['lastViewed_excerpt_type'] ) ? $instance['lastViewed_excerpt_type'] : false;
         $lastViewed_excerpt_type = esc_attr($lastViewed_excerpt_type);
 
+
+        $lastViewed_content_rich = isset( $instance['lastViewed_content_rich'] ) ? $instance['lastViewed_content_rich'] : false;
+        $lastViewed_content_rich = esc_attr($lastViewed_content_rich);
+
         $lastViewed_showTruncate = isset( $instance['lastViewed_showTruncate'] ) ? (bool) $instance['lastViewed_showTruncate'] : false;
 
         $lastViewed_showMore = isset( $instance['lastViewed_showMore'] ) ? (bool) $instance['lastViewed_showMore'] : false;
@@ -110,12 +114,20 @@ class lastviewed extends WP_Widget
         $type_c_checked = $excerpt_type == 'content' ? 'checked' : '';
         $type_e_checked = $excerpt_type == 'excerpt' ? 'checked' : '';
 
+        $rich_r_checked = $lastViewed_content_rich == 'rich' ? 'checked' : '';
+        $rich_p_checked = $lastViewed_content_rich == 'plain' ? 'checked' : '';
+
+
+
+
         $showExcerpt = '<div class="showExcerpt LV_setting_row"> ';
         $showExcerpt .= inputSwitch($lastViewed_showExcerpt);
         $showExcerpt .= '<input id="lastViewed_showExcerpt" name="' .$this->get_field_name('lastViewed_showExcerpt').'" type="checkbox" '.$checked.'/>';
 
         $showExcerpt .= __('Display').'  ';
-        $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_excerpt_type').'" '.$type_c_checked.' value="content">Content</label>';
+        $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_excerpt_type').'" '.$type_c_checked.' value="content">Content </label>';
+        $showExcerpt .= '<div class="content_rich">(<label><input type="radio" name="' .$this->get_field_name('lastViewed_content_rich').'" '.$rich_r_checked.'  value="rich">Rich</label>';
+        $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_content_rich').'"  '.$rich_p_checked.' value="plain">Plain </label>)</div>';
         $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_excerpt_type').'" '.$type_e_checked.' value="excerpt">Excerpt</label>';
         $showExcerpt .= '</div>';
 
@@ -170,6 +182,7 @@ class lastviewed extends WP_Widget
         $instance['lastViewed_showExcerpt'] = (bool) $new_instance['lastViewed_showExcerpt'];
 
         $instance['lastViewed_excerpt_type'] = strip_tags($new_instance['lastViewed_excerpt_type']);
+        $instance['lastViewed_content_rich'] = strip_tags($new_instance['lastViewed_content_rich']);
 
         $instance['lastViewed_showTruncate'] = (bool) $new_instance['lastViewed_showTruncate'];
         $instance['lastViewed_showMore'] = (bool) $new_instance['lastViewed_showMore'];
@@ -192,6 +205,12 @@ class lastviewed extends WP_Widget
         $lastViewed_showExcerpt = $widgetOptions[$widgetID]['lastViewed_showExcerpt'];
 
         $lastViewed_excerpt_type = $widgetOptions[$widgetID]['lastViewed_excerpt_type'];
+
+
+        $lastViewed_content_rich = $widgetOptions[$widgetID]['lastViewed_content_rich'];
+
+
+
         $lastViewed_showTruncate = $widgetOptions[$widgetID]['lastViewed_showTruncate'];
 
         $lastViewed_showMore = $widgetOptions[$widgetID]['lastViewed_showMore'];
@@ -216,8 +235,13 @@ class lastviewed extends WP_Widget
 
                     $the_post = get_post($id); //Gets post ID
 
-                    $the_content = strip_shortcodes( $the_post->post_content );
-                    $the_content = wp_strip_all_tags( $the_content, $remove_breaks );
+                    $the_content = $the_post->post_content;
+
+                    if($lastViewed_content_rich == 'plain'){
+                        $the_content = strip_shortcodes( $the_content );
+                        $the_content = wp_strip_all_tags( $the_content, $remove_breaks );
+                    }
+
 
                     $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_content; //get_the_excerpt($the_post);
                     $the_excerpt = $lastViewed_excerpt_type == 'content' ? $the_content : $the_excerpt;
