@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 2.3.1
+Version: 2.5
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed/visited widget
 Author: Wouter Dijkstra
@@ -54,9 +54,20 @@ add_action( 'admin_init', 'dd_lastviewed_admin' );
 
 
 function add_lastviewed_id() {
+
     if (is_singular()) {
-        //Set a hidden input to get always the id of the single or page.
-        echo'<input id="LastViewed_ID" type="hidden" data-id="' . get_the_id() . '">';
+        $post_type = get_post_type();
+        $lastviewed_widgets =get_option('widget_lastviewed');
+
+        foreach($lastviewed_widgets as $id => $lastviewed_widget){
+            $types = $lastviewed_widget["selected_posttypes"];
+            $posts_per_widget = $lastviewed_widget["lastViewed_total"];
+
+            if (in_array($post_type, $types)){
+                //Set a hidden input to get always the id of the single or page.
+                echo'<input id="cookie_data_lastviewed_widget_'.$id.'" class="lastviewed_data" type="hidden" data-post-per-widget="'.$posts_per_widget.'" data-post-id="' . get_the_id() . '">';
+            }
+        }
     }
 }
 add_action('wp_footer', 'add_lastviewed_id');

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=5V2C9
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget, recent, visit, visited
 Requires at least: 3.3
 Tested up to: 4.2.2
-Stable tag: 2.3.1
+Stable tag: 2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,16 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 2.5 =
+* Refined code
+* Get posts by one query
+* Set cookie per widget
+* Fill cookies with id's of types set in the widget
+* Cookie length set by length in widget
+* Fix shortcode in rich content
+* Added warning in front when options are not set
+* Fix show last id on index
 
 = 2.3.1 =
 * Added rich/plain radio input

@@ -25,23 +25,16 @@ class lastviewed extends WP_Widget
         $lastViewed_truncate = esc_attr($lastViewed_truncate);
         $lastViewed_linkname = isset($instance['lastViewed_linkname']) ? $instance['lastViewed_linkname'] : "More";
         $lastViewed_linkname = esc_attr($lastViewed_linkname);
-
         $lastViewed_showPostTitle = isset( $instance['lastViewed_showPostTitle'] ) ? (bool) $instance['lastViewed_showPostTitle'] : false;
         $lastViewed_showThumb = isset( $instance['lastViewed_showThumb'] ) ? (bool) $instance['lastViewed_showThumb'] : false;
         $lastViewed_thumbSize = isset($instance['lastViewed_thumbSize']) ? $instance['lastViewed_thumbSize'] : "thumbnail";
         $lastViewed_thumbSize = esc_attr($lastViewed_thumbSize);
-
         $lastViewed_showExcerpt = isset( $instance['lastViewed_showExcerpt'] ) ? (bool) $instance['lastViewed_showExcerpt'] : false;
-
         $lastViewed_excerpt_type = isset( $instance['lastViewed_excerpt_type'] ) ? $instance['lastViewed_excerpt_type'] : false;
         $lastViewed_excerpt_type = esc_attr($lastViewed_excerpt_type);
-
-
         $lastViewed_content_rich = isset( $instance['lastViewed_content_rich'] ) ? $instance['lastViewed_content_rich'] : false;
         $lastViewed_content_rich = esc_attr($lastViewed_content_rich);
-
         $lastViewed_showTruncate = isset( $instance['lastViewed_showTruncate'] ) ? (bool) $instance['lastViewed_showTruncate'] : false;
-
         $lastViewed_showMore = isset( $instance['lastViewed_showMore'] ) ? (bool) $instance['lastViewed_showMore'] : false;
 
 
@@ -113,17 +106,11 @@ class lastviewed extends WP_Widget
         $excerpt_type = $lastViewed_excerpt_type;
         $type_c_checked = $excerpt_type == 'content' ? 'checked' : '';
         $type_e_checked = $excerpt_type == 'excerpt' ? 'checked' : '';
-
         $rich_r_checked = $lastViewed_content_rich == 'rich' ? 'checked' : '';
         $rich_p_checked = $lastViewed_content_rich == 'plain' ? 'checked' : '';
-
-
-
-
         $showExcerpt = '<div class="showExcerpt LV_setting_row"> ';
         $showExcerpt .= inputSwitch($lastViewed_showExcerpt);
         $showExcerpt .= '<input id="lastViewed_showExcerpt" name="' .$this->get_field_name('lastViewed_showExcerpt').'" type="checkbox" '.$checked.'/>';
-
         $showExcerpt .= __('Display').'  ';
         $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_excerpt_type').'" '.$type_c_checked.' value="content">Content </label>';
         $showExcerpt .= '<div class="content_rich">(<label><input type="radio" name="' .$this->get_field_name('lastViewed_content_rich').'" '.$rich_r_checked.'  value="rich">Rich</label>';
@@ -180,10 +167,8 @@ class lastviewed extends WP_Widget
         $instance['lastViewed_showThumb'] = (bool) $new_instance['lastViewed_showThumb'];
         $instance['lastViewed_thumbSize'] = strip_tags($new_instance['lastViewed_thumbSize']);
         $instance['lastViewed_showExcerpt'] = (bool) $new_instance['lastViewed_showExcerpt'];
-
         $instance['lastViewed_excerpt_type'] = strip_tags($new_instance['lastViewed_excerpt_type']);
         $instance['lastViewed_content_rich'] = strip_tags($new_instance['lastViewed_content_rich']);
-
         $instance['lastViewed_showTruncate'] = (bool) $new_instance['lastViewed_showTruncate'];
         $instance['lastViewed_showMore'] = (bool) $new_instance['lastViewed_showMore'];
 
@@ -203,113 +188,96 @@ class lastviewed extends WP_Widget
         $lastViewed_showThumb = $widgetOptions[$widgetID]['lastViewed_showThumb'];
         $lastViewed_thumbSize = $widgetOptions[$widgetID]['lastViewed_thumbSize'];
         $lastViewed_showExcerpt = $widgetOptions[$widgetID]['lastViewed_showExcerpt'];
-
         $lastViewed_excerpt_type = $widgetOptions[$widgetID]['lastViewed_excerpt_type'];
-
-
         $lastViewed_content_rich = $widgetOptions[$widgetID]['lastViewed_content_rich'];
-
-
-
         $lastViewed_showTruncate = $widgetOptions[$widgetID]['lastViewed_showTruncate'];
-
         $lastViewed_showMore = $widgetOptions[$widgetID]['lastViewed_showMore'];
 
-        $lastlist = ($_COOKIE['lastViewed']);
+        $cookie_name = 'cookie_data_lastviewed_widget_'.$widgetID;
+
+        $lastlist = ($_COOKIE[$cookie_name]);
+
         $idList = explode(",", $lastlist);
         $idList = array_reverse($idList);
-        $count = 0;
-        $currentVisitPostId = get_the_ID();
-        //get also the selected types
         $selected_posttypes = get_option('widget_lastViewed');
         $selected_posttypes = isset($selected_posttypes[$widgetID]["selected_posttypes"]) ? $selected_posttypes[$widgetID]["selected_posttypes"] : false;
 
         extract($args, EXTR_SKIP);
 
-        if ($selected_posttypes && isset($_COOKIE["lastViewed"]) && $lastlist !== "") {
+        if(is_singular()){
+            $currentVisitPostId = get_the_ID();
+            $idList = array_diff($idList, array($currentVisitPostId)); // strip this id from idlist
+        }
+
+        $args=array('post__in'=> $idList, 'post_type' => $selected_posttypes, 'orderby'=>'post__in', 'posts_per_page'=> $lastViewed_total);
+        $my_query = new WP_Query($args);
+        $hasThumb = $lastViewed_showThumb ? $lastViewed_showThumb : false;
+
+        if( $my_query->have_posts() && $selected_posttypes ) {
 
             echo $before_widget;
-            echo $before_title.$lastviewedTitle.$after_title;
-            echo '<ul class="lastViewedList">';
-                foreach ($idList as $id) {
+                echo $before_title.$lastviewedTitle.$after_title;
 
-                    $the_post = get_post($id); //Gets post ID
+                if(!$lastViewed_showPostTitle && !$lastViewed_showExcerpt &&  !$hasThumb ){
+                    echo'<p>No options set yet! Set the options in the <a href="'.esc_url( home_url( '/wp-admin/widgets.php' ) ).'">widget</a>.</p>';
+                }
+                echo '<ul class="lastViewedList">';
 
-                    $the_content = $the_post->post_content;
+                    while ($my_query->have_posts()) : $my_query->the_post();
 
-                    if($lastViewed_content_rich == 'plain'){
-                        $the_content = strip_shortcodes( $the_content );
-                        $the_content = wp_strip_all_tags( $the_content, $remove_breaks );
-                    }
+                        $id = get_the_ID();
+                        $title = get_the_title();
+                        $strip_content = $lastViewed_content_rich == 'plain' && $lastViewed_excerpt_type == 'content'; // 1/0
+                        $content = get_the_content();
+                        $content = apply_filters( 'the_content', $content );
+                        $content = $strip_content ? strip_shortcodes( $content ) : $content;
+                        $content = $strip_content ? wp_strip_all_tags( $content, $remove_breaks ) : $content;
+                        $content = $lastViewed_excerpt_type == 'content' ? $content : get_the_excerpt();
+                        $content = $lastViewed_showTruncate ? substr($content, 0, strrpos(substr($content, 0, $lastViewed_truncate), ' ')) : $content;
 
+                        $thumb = get_the_post_thumbnail($id,$lastViewed_thumbSize);
+                        $hasThumb = $lastViewed_showThumb && has_post_thumbnail() ? $lastViewed_showThumb : false;
+                        $perma = get_permalink();
+                        $clearfix = $hasThumb ? "clearfix" : "";
 
-                    $the_excerpt = ($the_post->post_excerpt) ? $the_post->post_excerpt : $the_content; //get_the_excerpt($the_post);
-                    $the_excerpt = $lastViewed_excerpt_type == 'content' ? $the_content : $the_excerpt;
+                        echo '<li class="'.$clearfix.'">';
 
+                            if ($hasThumb && $lastViewed_showPostTitle | $lastViewed_showExcerpt) {
+                                echo '<div class="lastViewedThumb">'.$thumb.'</div>';
+                            }
+                            elseif ($hasThumb && !$lastViewed_showPostTitle && !$lastViewed_showExcerpt) {
+                                echo '<a class="lastViewedThumb" href="' . $perma . '">'.$thumb.'</a>';
+                            }
 
-                    $viewType = get_post_type($the_post);
-
-
-
-                    if ($the_post && $id != $currentVisitPostId ) {
-
-                        //Do not show types which aren't allowed
-                        foreach ($selected_posttypes as $selected_type) {
-
-                            if ($selected_type == $viewType && $count < $lastViewed_total ) {
-                                $count++;
-
-                                $hasThumb = $lastViewed_showThumb && has_post_thumbnail($id) ? $lastViewed_showThumb : false;
-                                $clearfix = $hasThumb ? "class='clearfix'" : "";
-
-                                echo '<li '.$clearfix.'>';
-
-                                if ($hasThumb && $lastViewed_showPostTitle | $lastViewed_showExcerpt) {
-                                    echo '<div class="lastViewedThumb">'.get_the_post_thumbnail($id, $lastViewed_thumbSize).'</div>';
-                                }
-                                elseif ($hasThumb && !$lastViewed_showPostTitle && !$lastViewed_showExcerpt) {
-                                    echo '<a class="lastViewedThumb" href="' . get_permalink($id) . '">'.get_the_post_thumbnail($id, $lastViewed_thumbSize).'</a>';
-                                }
-
-                                echo '<div class="lastViewedcontent">';
+                            echo '<div class="lastViewedcontent">';
 
                                 if($lastViewed_showPostTitle){
-                                    echo '<a class="lastViewedTitle" href="' . get_permalink($id) . '">' . get_the_title($id) . '</a>';
+                                    echo '<a class="lastViewedTitle" href="' . $perma . '">' . $title . '</a>';
                                 }
-
-                                if($lastViewed_showTruncate){
-                                    $the_excerpt =  substr($the_excerpt, 0, strrpos(substr($the_excerpt, 0, $lastViewed_truncate), ' '));
-                                }
-
-
 
                                 if(!$lastViewed_showPostTitle && $lastViewed_showExcerpt){
 
-                                    echo '<a href="' . get_permalink($id) . '" class="lastViewedExcerpt">'.$the_excerpt;
+                                    echo '<a href="' . $perma . '" class="lastViewedExcerpt">'.$content;
                                         if($lastViewed_showMore){
                                             echo '<span class="more">'.$lastViewed_linkname.'</span>';
                                         }
-                                     echo '</a>';
-
+                                    echo '</a>';
                                 }
+
                                 elseif($lastViewed_showPostTitle && $lastViewed_showExcerpt){
-                                    echo "<p class='lastViewedExcerpt'>" .$the_excerpt;
+                                    echo "<p class='lastViewedExcerpt'>" .$content;
                                         if($lastViewed_showMore){
-                                            echo '<a href="' . get_permalink($id) . '" class="more">'.$lastViewed_linkname.'</a>';
+                                            echo '<a href="' . $perma . '" class="more">'.$lastViewed_linkname.'</a>';
                                         }
-                                    echo '</p>'; //stop afterfull word
+                                    echo '</p>';
                                 }
-
-
-                                echo '</div>';
-                                echo '</li>';
-                            }
-                        }
-                    }
-                }
-            echo '</ul>';
+                            echo '</div>';
+                        echo '</li>';
+                    endwhile;
+                echo '</ul>';
             echo $after_widget;
         }
+        wp_reset_query();
     }
 }
 add_action('widgets_init', create_function('', 'return register_widget("lastviewed");'));
