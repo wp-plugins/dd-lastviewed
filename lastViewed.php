@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 2.5
+Version: 2.5.1
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed/visited widget
 Author: Wouter Dijkstra
@@ -60,6 +60,11 @@ function add_lastviewed_id() {
         $lastviewed_widgets =get_option('widget_lastviewed');
 
         foreach($lastviewed_widgets as $id => $lastviewed_widget){
+
+            if($id == '_multiwidget'){
+                break;
+
+            }
             $types = $lastviewed_widget["selected_posttypes"];
             $posts_per_widget = $lastviewed_widget["lastViewed_total"];
 
