@@ -229,6 +229,10 @@ class lastviewed extends WP_Widget
                         $title = get_the_title();
                         $strip_content = $lastViewed_content_rich == 'plain' && $lastViewed_excerpt_type == 'content'; // 1/0
                         $content = get_the_content();
+
+                        $regex = '/\[dd_lastviewed(.*?)\]/'; //avoid shortcode '[lastviewed] in order to prevent a loop
+                        $content = preg_replace($regex, '', $content);
+
                         $content = apply_filters( 'the_content', $content );
                         $content = $strip_content ? strip_shortcodes( $content ) : $content;
                         $content = $strip_content ? wp_strip_all_tags( $content, $remove_breaks ) : $content;
