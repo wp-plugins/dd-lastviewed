@@ -79,7 +79,7 @@ class lastviewed extends WP_Widget
         $showTitle = '<div class="showTitle LV_setting_row"> ';
         $showTitle .= inputSwitch($lastViewed_showPostTitle);
         $showTitle .= '<input id="lastViewed_showPostTitle" name="' .$this->get_field_name('lastViewed_showPostTitle').'" type="checkbox" '.$checked.'/>';
-        $showTitle .= __('Display Item Title');
+        $showTitle .= __('Title');
         $showTitle .= '</div>';
 
         echo $showTitle;
@@ -89,7 +89,7 @@ class lastviewed extends WP_Widget
         $showThumb = '<div class="showThumb LV_setting_row"> ';
         $showThumb .= inputSwitch($lastViewed_showThumb);
         $showThumb .= '<input id="lastViewed_showThumb" name="' .$this->get_field_name('lastViewed_showThumb').'" type="checkbox" '.$checked.'/>';
-        $showThumb .= __('Display Thumbnail');
+        $showThumb .= __('Thumbnail');
             $all_sizes = get_intermediate_image_sizes();
             $dropdown = '<select name="'.$this->get_field_name('lastViewed_thumbSize').'">';
                 foreach($all_sizes as $size){
@@ -105,13 +105,13 @@ class lastviewed extends WP_Widget
         $checked = $lastViewed_showExcerpt == true ? 'checked="checked"' : '';
         $excerpt_type = $lastViewed_excerpt_type;
         $type_c_checked = $excerpt_type == 'content' ? 'checked' : '';
-        $type_e_checked = $excerpt_type == 'excerpt' ? 'checked' : '';
+        $type_e_checked = $excerpt_type == 'excerpt' || $excerpt_type == '' ? 'checked' : '';
         $rich_r_checked = $lastViewed_content_rich == 'rich' ? 'checked' : '';
         $rich_p_checked = $lastViewed_content_rich == 'plain' ? 'checked' : '';
         $showExcerpt = '<div class="showExcerpt LV_setting_row"> ';
         $showExcerpt .= inputSwitch($lastViewed_showExcerpt);
         $showExcerpt .= '<input id="lastViewed_showExcerpt" name="' .$this->get_field_name('lastViewed_showExcerpt').'" type="checkbox" '.$checked.'/>';
-        $showExcerpt .= __('Display').'  ';
+        $showExcerpt .= __('Show').'  ';
         $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_excerpt_type').'" '.$type_c_checked.' value="content">Content </label>';
         $showExcerpt .= '<div class="content_rich">(<label><input type="radio" name="' .$this->get_field_name('lastViewed_content_rich').'" '.$rich_r_checked.'  value="rich">Rich</label>';
         $showExcerpt .= '<label><input type="radio" name="' .$this->get_field_name('lastViewed_content_rich').'"  '.$rich_p_checked.' value="plain">Plain </label>)</div>';
@@ -135,7 +135,7 @@ class lastviewed extends WP_Widget
         $showMore = '<div class="showMore LV_setting_row"> ';
         $showMore .= inputSwitch($lastViewed_showMore);
         $showMore .= '<input id="lastViewed_showMore" name="' .$this->get_field_name('lastViewed_showMore').'" type="checkbox" '.$checked.'/>';
-        $showMore .= __('Display Breaklink').'   ';
+        $showMore .= __('Breaklink').'   ';
         $showMore .= '<input id="'. $this->get_field_id('lastViewed_linkname').'" class="textWrite_Title" type="text" value="'.esc_attr($lastViewed_linkname).'"name="'. $this->get_field_name('lastViewed_linkname').'">';
         $showMore .= '</div>';
 
@@ -194,7 +194,6 @@ class lastviewed extends WP_Widget
         $lastViewed_showMore = $widgetOptions[$widgetID]['lastViewed_showMore'];
 
         $cookie_name = 'cookie_data_lastviewed_widget_'.$widgetID;
-
         $lastlist = ($_COOKIE[$cookie_name]);
 
         $idList = explode(",", $lastlist);
@@ -216,7 +215,10 @@ class lastviewed extends WP_Widget
         if( $my_query->have_posts() && $selected_posttypes ) {
 
             echo $before_widget;
+
+            if($lastviewedTitle){
                 echo $before_title.$lastviewedTitle.$after_title;
+            }
 
                 if(!$lastViewed_showPostTitle && !$lastViewed_showExcerpt &&  !$hasThumb ){
                     echo'<p>No options set yet! Set the options in the <a href="'.esc_url( home_url( '/wp-admin/widgets.php' ) ).'">widget</a>.</p>';
@@ -267,7 +269,6 @@ class lastviewed extends WP_Widget
                                         }
                                     echo '</a>';
                                 }
-
                                 elseif($lastViewed_showPostTitle && $lastViewed_showExcerpt){
                                     echo "<p class='lastViewedExcerpt'>" .$content;
                                         if($lastViewed_showMore){
@@ -285,7 +286,6 @@ class lastviewed extends WP_Widget
     }
 }
 add_action('widgets_init', create_function('', 'return register_widget("lastviewed");'));
-
 
 function inputSwitch($value){
 

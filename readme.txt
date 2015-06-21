@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=5V2C9
 Tags: History, Last, Viewed, posts, custom, posttypes, thumbnail, cookie, widget, recent, visit, visited
 Requires at least: 3.3
 Tested up to: 4.2.2
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,14 +14,15 @@ Just another DD widget. Shows the users recently viewed/visited posts,pages and 
 
 This plugin contains the lastViewed-widget. This widget displays the last visited posts, pages or custom posttypes of your visitor.
 
-The widget is fully set. 
+The widget can bu fully set:
 
 * Choose the types
 * Set the maximum
 * Set thumbnail on/off
+* Show Content(rich or plain) or Excerpt
 * Set the excerpt length
 
-The plugin sets a cookie that keeps track of the visited IDs. It uses jquery.cookie.js to make this possible.
+The plugin sets a cookie that keeps track of the visited IDs.
 
 The widget searches for the cookie. So to activate the widget, the visitor has to go first to a single page of the selected posttypes to display the widget.
 
@@ -46,6 +47,12 @@ Do you have ideas, questions or issues with LastViewed? Please leave a message i
 When you're using custom posttypes, they will show up like posts.
 
 == Changelog ==
+
+= 2.5.2 =
+* Set cookie by PHP instead of JS
+* Hide H2 element while title is not set
+* Tuned phrases
+* Removed files
 
 = 2.5.1 =
 * Fix error with '_multiwidget'

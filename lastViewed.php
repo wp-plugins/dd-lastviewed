@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: DD Last Viewed
-Version: 2.5.1
+Version: 2.5.2
 Plugin URI: http://dijkstradesign.com
 Description: A plug-in to add a last viewed/visited widget
 Author: Wouter Dijkstra
@@ -32,12 +32,6 @@ function dd_lastviewed_add_front()
 {
     wp_register_style( 'dd_lastviewed_css', plugins_url('/css/style.css', __FILE__) );
     wp_enqueue_style( 'dd_lastviewed_css' );
-
-    if (is_singular()) {
-        wp_enqueue_script('jquery');
-        wp_enqueue_script( 'jquery-cookie', plugins_url( '/js/jquery.cookie.js', __FILE__ ) , array( 'jquery' ), '' );
-        wp_enqueue_script( 'dd_js_lastviewed', plugins_url( '/js/lastviewed.js', __FILE__ ) , array( 'jquery','jquery-cookie' ), '' );
-    }
 }
 add_action( 'wp_enqueue_scripts', 'dd_lastviewed_add_front' );
 
@@ -63,16 +57,32 @@ function add_lastviewed_id() {
 
             if($id == '_multiwidget'){
                 break;
-
             }
             $types = $lastviewed_widget["selected_posttypes"];
-            $posts_per_widget = $lastviewed_widget["lastViewed_total"];
+            $posts_per_widget = $lastviewed_widget["lastViewed_total"]; // Need for the slice
 
             if (in_array($post_type, $types)){
-                //Set a hidden input to get always the id of the single or page.
-                echo'<input id="cookie_data_lastviewed_widget_'.$id.'" class="lastviewed_data" type="hidden" data-post-per-widget="'.$posts_per_widget.'" data-post-id="' . get_the_id() . '">';
+
+                global $post;
+                $post_id = $post->ID;
+                $cookieName = "cookie_data_lastviewed_widget_".$id;
+                $cookieVal = $_COOKIE[$cookieName];
+                $newList = array();
+
+                if(isset($cookieVal)) {
+                    $oldList = explode(',', $cookieVal);
+                    $newList = array_diff( $oldList, array($post_id) );
+
+                    // TODO splice to set total
+
+                    $newList = array_slice($newList, 0, $posts_per_widget, true);
+                }
+                array_push($newList, $post_id);
+                $newList = implode(",", $newList);
+
+                setcookie($cookieName, $newList, time() + (60 * 60 * 24 * 30), "/"); // 30 days
             }
         }
     }
 }
-add_action('wp_footer', 'add_lastviewed_id');
+add_action('get_header', 'add_lastviewed_id');
